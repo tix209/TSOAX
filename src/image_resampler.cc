@@ -19,7 +19,7 @@
  */
 
 
-#include "image_resampler.h"
+#include "include/image_resampler.h"
 #include <cassert>
 #include "vtkImageData.h"
 #include "vtkImageResize.h"

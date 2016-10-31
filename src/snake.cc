@@ -21,11 +21,11 @@
  */
 
 
-#include "./snake.h"
+#include "include/snake.h"
 #include <iostream>
-#include "./interpolator.h"
-#include "./util.h"
-#include "./snake_parameters.h"
+#include "include/interpolator.h"
+#include "include/util.h"
+#include "include/snake_parameters.h"
 
 namespace soax {
 Snake::Snake() :

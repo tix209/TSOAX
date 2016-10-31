@@ -19,7 +19,7 @@
  * This file implements the SnakeActor class.
  */
 
-#include "./snake_actor.h"
+#include "include/snake_actor.h"
 #include "vtkActor.h"
 #include "vtkPolyData.h"
 #include "vtkPolyDataMapper.h"
@@ -27,8 +27,8 @@
 #include "vtkCellArray.h"
 #include "vtkPoints.h"
 #include "vtkRenderer.h"
-#include "./snake.h"
-#include "./actor_color.h"
+#include "include/snake.h"
+#include "include/actor_color.h"
 
 namespace soax {
 

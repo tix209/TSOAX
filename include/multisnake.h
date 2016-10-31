@@ -26,11 +26,11 @@
 #include <QObject>
 #include <vector>
 #include <deque>
-#include <QString>  // NOLINT
-#include "./util.h"
-#include "./junctions.h"
-#include "./munkres.h"
-#include "./snake_track.h"
+#include <QString>
+#include "include/util.h"
+#include "include/junctions.h"
+#include "include/munkres.h"
+#include "include/snake_track.h"
 
 class vtkImageData;
 class QProgressBar;

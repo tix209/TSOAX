@@ -23,8 +23,8 @@
 #ifndef SNAKE_TIP_SET_H_
 #define SNAKE_TIP_SET_H_
 
-#include "./util.h"
-#include "./munkres.h"
+#include "include/util.h"
+#include "include/munkres.h"
 
 
 namespace soax {

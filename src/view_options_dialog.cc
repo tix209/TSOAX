@@ -19,7 +19,7 @@
  * This class implements the dialog for setting visualization parameters.
  */
 
-#include "./view_options_dialog.h"
+#include "include/view_options_dialog.h"
 #include <QLineEdit>
 #include <QGroupBox>
 #include <QDialogButtonBox>

@@ -19,14 +19,14 @@
  * This file implements the GradientCalculator class.
  */
 
-#include "./gradient_calculator.h"
+#include "include/gradient_calculator.h"
 #include "vtkImageData.h"
 #include "vtkImageGradient.h"
 #include "vtkImageRGBToHSV.h"
 #include "vtkImageExtractComponents.h"
 #include "vtkImageShiftScale.h"
 #include "vtkImageGaussianSmooth.h"
-#include "./util.h"
+#include "include/util.h"
 
 namespace soax {
 

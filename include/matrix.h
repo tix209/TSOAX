@@ -61,8 +61,7 @@ class Matrix {
 };
 
 #ifndef USE_EXPORT_KEYWORD
-#include "matrix.cpp"
-//#define export /*export*/
+#include "include/matrix.hpp"
 #endif
 
 #endif /* !defined(_MATRIX_H_) */

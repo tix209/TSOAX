@@ -1,20 +1,20 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
-  <file>icon/Letter-T.png</file>
-  <file>icon/Open.png</file>
-  <file>icon/Picture.png</file>
-  <file>icon/Globe.png</file>
-  <file>icon/Logout.png</file>
-  <file>icon/Add.png</file>
-  <file>icon/Synchronize.png</file>
-  <file>icon/Positive.png</file>
-  <file>icon/Settings.png</file>
-  <file>icon/Search.png</file>
-  <file>icon/Save.png</file>
-  <file>icon/Play.png</file>
-  <file>icon/Cancel.png</file>
-  <file>icon/Upload.png</file>
-  <file>icon/Copy.png</file>
-  <file>icon/Properties.png</file>
+  <file>../icon/Letter-T.png</file>
+  <file>../icon/Open.png</file>
+  <file>../icon/Picture.png</file>
+  <file>../icon/Globe.png</file>
+  <file>../icon/Logout.png</file>
+  <file>../icon/Add.png</file>
+  <file>../icon/Synchronize.png</file>
+  <file>../icon/Positive.png</file>
+  <file>../icon/Settings.png</file>
+  <file>../icon/Search.png</file>
+  <file>../icon/Save.png</file>
+  <file>../icon/Play.png</file>
+  <file>../icon/Cancel.png</file>
+  <file>../icon/Upload.png</file>
+  <file>../icon/Copy.png</file>
+  <file>../icon/Properties.png</file>
 </qresource>
 </RCC>

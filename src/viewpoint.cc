@@ -20,7 +20,7 @@
  */
 
 
-#include "./viewpoint.h"
+#include "include/viewpoint.h"
 #include <sstream>
 #include <fstream>
 #include <QFileInfo>  // NOLINT(build/include_order)

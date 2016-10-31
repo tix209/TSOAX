@@ -18,7 +18,7 @@
  *
  */
 
-#include "./interpolator.h"
+#include "include/interpolator.h"
 #include "vtkImageData.h"
 #include "vtkImageInterpolator.h"
 

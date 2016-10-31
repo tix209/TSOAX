@@ -20,14 +20,14 @@
  * parameters.
  */
 
-#include "./parameters_dialog.h"
+#include "include/parameters_dialog.h"
 #include <QLineEdit>
 #include <QDialogButtonBox>
 #include <QGroupBox>
 #include <QCheckBox>
 #include <QVBoxLayout>
 #include <QFormLayout>
-#include "./snake_parameters.h"
+#include "include/snake_parameters.h"
 
 namespace soax {
 

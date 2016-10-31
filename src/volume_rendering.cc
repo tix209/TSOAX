@@ -20,7 +20,7 @@
  */
 
 
-#include "./volume_rendering.h"
+#include "include/volume_rendering.h"
 #include "vtkImageData.h"
 #include "vtkVolume.h"
 #include "vtkVolumeMapper.h"

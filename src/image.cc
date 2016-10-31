@@ -19,7 +19,7 @@
  * This file defines utility functions on image processing.
  */
 
-#include "./image.h"
+#include "include/image.h"
 #include "vtkImageData.h"
 #include "vtkMetaImageWriter.h"
 #include "vtkTIFFWriter.h"

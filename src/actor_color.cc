@@ -18,7 +18,7 @@
  *
  */
 
-#include "./actor_color.h"
+#include "include/actor_color.h"
 
 namespace soax {
 

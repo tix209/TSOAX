@@ -19,7 +19,7 @@
  * This file implements the SlicePlanes class.
  */
 
-#include "./slice_planes.h"
+#include "include/slice_planes.h"
 #include "QVTKInteractor.h"
 #include "vtkImagePlaneWidget.h"
 #include "vtkImageData.h"

@@ -19,7 +19,7 @@
  */
 
 
-#include "./image_reader.h"
+#include "include/image_reader.h"
 #include <algorithm>
 #include <QFileInfo>
 #include <QMap>
@@ -107,8 +107,9 @@ QString ImageReader::GetFilePath(int index) const {
   return paths_[index];
 }
 
-QString ImageReader::GetFileNameWithoutSuffix(int index = 0) const {
-  // todo:
+QString ImageReader::GetFileNameWithoutSuffix(int index) const {
+  QString result;
+  return result;
 }
 
 QString ImageReader::GetAllowedFormatAsString() const {

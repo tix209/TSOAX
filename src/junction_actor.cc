@@ -19,14 +19,14 @@
  * This file implements the JunctionActor class.
  */
 
-#include "./junction_actor.h"
+#include "include/junction_actor.h"
 #include "vtkActor.h"
 #include "vtkRenderer.h"
 #include "vtkPolyData.h"
 #include "vtkPolyDataMapper.h"
 #include "vtkProperty.h"
 #include "vtkSphereSource.h"
-#include "./actor_color.h"
+#include "include/actor_color.h"
 
 namespace soax {
 

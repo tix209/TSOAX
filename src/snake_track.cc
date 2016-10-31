@@ -17,9 +17,9 @@
  * Author: Ting Xu (xuting.bme@gmail.com)
  */
 
-#include "./snake_track.h"
+#include "include/snake_track.h"
 #include <iostream>
-#include "./snake.h"
+#include "include/snake.h"
 
 namespace soax {
 

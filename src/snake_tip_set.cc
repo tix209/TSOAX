@@ -21,9 +21,9 @@
  */
 
 #include <iostream>
-#include "./snake_tip_set.h"
-#include "./snake_tip.h"
-#include "./snake.h"
+#include "include/snake_tip_set.h"
+#include "include/snake_tip.h"
+#include "include/snake.h"
 
 
 namespace soax {

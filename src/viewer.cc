@@ -20,9 +20,9 @@
  */
 
 
-#include "./viewer.h"
+#include "include/viewer.h"
 #include <sstream>
-#include <QFileInfo>  // NOLINT(build/include_order)
+#include <QFileInfo>
 #include <QString>
 #include "QVTKWidget.h"
 #include "QVTKInteractor.h"
@@ -39,12 +39,12 @@
 #include "vtkEventQtSlotConnect.h"
 #include "vtkPointPicker.h"
 
-#include "./image_plane.h"
-#include "./slice_planes.h"
-#include "./volume_rendering.h"
-#include "./snake_actor.h"
-#include "./junction_actor.h"
-#include "./actor_color.h"
+#include "include/image_plane.h"
+#include "include/slice_planes.h"
+#include "include/volume_rendering.h"
+#include "include/snake_actor.h"
+#include "include/junction_actor.h"
+#include "include/actor_color.h"
 
 namespace soax {
 

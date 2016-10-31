@@ -19,11 +19,11 @@
  * This file implements the assemble of all parameters for a SOAC.
  */
 
-#include "./snake_parameters.h"
+#include "include/snake_parameters.h"
 #include <iostream>
 #include <sstream>
 #include <fstream>
-#include "./util.h"
+#include "include/util.h"
 
 namespace soax {
 

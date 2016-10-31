@@ -18,7 +18,7 @@
  */
 
 
-#include "./image_plane.h"
+#include "include/image_plane.h"
 #include "vtkImageActor.h"
 #include "vtkImageData.h"
 #include "vtkRenderer.h"

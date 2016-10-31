@@ -20,7 +20,7 @@
  */
 
 
-#include "main_window.h"
+#include "include/main_window.h"
 #include <QMenuBar>
 #include <QProgressBar>
 #include <QScrollBar>
@@ -34,22 +34,22 @@
 #include <QInputDialog>
 #include "QVTKWidget.h"
 
-#include "./image_reader.h"
-#include "./viewer.h"
-#include "./viewpoint.h"
-#include "./multisnake.h"
-#include "./snake_parameters.h"
-#include "./snake_actor.h"
-#include "./image.h"
-#include "./image_resampler.h"
-#include "./parameters_dialog.h"
-#include "./view_options_dialog.h"
-#include "./image_plane.h"
-#include "./slice_planes.h"
-#include "./volume_rendering.h"
+#include "include/image_reader.h"
+#include "include/viewer.h"
+#include "include/viewpoint.h"
+#include "include/multisnake.h"
+#include "include/snake_parameters.h"
+#include "include/snake_actor.h"
+#include "include/image.h"
+#include "include/image_resampler.h"
+#include "include/parameters_dialog.h"
+#include "include/view_options_dialog.h"
+#include "include/image_plane.h"
+#include "include/slice_planes.h"
+#include "include/volume_rendering.h"
 
 #ifdef __APPLE__
-#include "osx_helper.h"
+#include "include/osx_helper.h"
 #endif
 
 namespace soax {
@@ -160,7 +160,7 @@ void MainWindow::SaveIsotropicImage() {
   for (std::size_t i = 0; i < reader_->GetNumberOfImages(); ++i) {
     QString filename = dir + reader_->GetFileNameWithoutSuffix(i) + "_iso.tif";
     resampler.Resize(reader_->GetImage(i), z_spacing);
-    resampler.WriteImage(filename);
+    resampler.WriteImage(filename.toStdString());
   }
 }
 

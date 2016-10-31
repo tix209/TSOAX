@@ -18,17 +18,17 @@
  *
  */
 
-#include "./multisnake.h"
+#include "include/multisnake.h"
 #include <iostream>
 #include <limits>
 #include <QApplication>
 #include "vtkImageData.h"
-#include "./gradient_calculator.h"
-#include "./snake.h"
-#include "./interpolator.h"
-#include "./image.h"
-#include "./snake_parameters.h"
-#include "./snake_tip.h"
+#include "include/gradient_calculator.h"
+#include "include/snake.h"
+#include "include/interpolator.h"
+#include "include/image.h"
+#include "include/snake_parameters.h"
+#include "include/snake_tip.h"
 
 
 namespace soax {
