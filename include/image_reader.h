@@ -97,9 +97,9 @@ class ImageReader {
   /**
    * Returns the path of the image with filename indexed by INDEX.
    */
-  QString GetFilePath(int index = 0) const;
+  QString GetFilePath(size_t index = 0) const;
 
-  QString GetFileNameWithoutSuffix(int index = 0) const;
+  QString GetFileNameWithoutSuffix(size_t index = 0) const;
 
   /**
    * Returns a string representation of allowed format. This is used as the

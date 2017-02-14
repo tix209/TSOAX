@@ -35,7 +35,7 @@ if (APPLE)
   add_executable(troax MACOSX_BUNDLE ${SRCS} osx_helper.mm icons.qrc
     ${ICON_FILE})
 else (APPLE)
-  add_executable(troax ${SRCS} ../icon/icons.qrc)
+  add_executable(troax ${SRCS} icons.qrc)
 endif (APPLE)
 
 target_link_libraries(troax Qt5::Widgets ${VTK_LIBRARIES})

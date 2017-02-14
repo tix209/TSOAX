@@ -101,13 +101,13 @@ int ImageReader::FindImage(vtkImageData *image) const {
   return -1;
 }
 
-QString ImageReader::GetFilePath(int index) const {
+QString ImageReader::GetFilePath(size_t index) const {
   if (paths_.empty())
     return "";
   return paths_[index];
 }
 
-QString ImageReader::GetFileNameWithoutSuffix(int index) const {
+QString ImageReader::GetFileNameWithoutSuffix(size_t index) const {
   QString result;
   return result;
 }
