@@ -3,7 +3,11 @@ set(CMAKE_AUTOMOC ON) # For meta object compiler
 set(CMAKE_AUTORCC ON) # Resource files
 set(CMAKE_AUTOUIC ON) # UI files
 
-find_package(Qt5Widgets REQUIRED)
+# A preferred way to setup Qt5 dependencies. See more at
+# https://blog.kitware.com/cmake-finding-qt5-the-right-way/. Before configure,
+# Qt5_DIR should be set by 'export Qt5_DIR="/usr/local/opt/qt5"' in your
+# .bashrc. Set CMAKE_PREFIX_PATH is discouraged.
+find_package(Qt5 COMPONENTS Widgets REQUIRED)
 find_package(VTK REQUIRED NO_MODULE)
 include(${VTK_USE_FILE})
 
