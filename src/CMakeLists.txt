@@ -8,7 +8,7 @@ set(CMAKE_AUTOUIC ON) # UI files
 # Qt5_DIR should be set by 'export Qt5_DIR="/usr/local/opt/qt5"' in your
 # .bashrc. Set CMAKE_PREFIX_PATH is discouraged.
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
-find_package(VTK REQUIRED NO_MODULE)
+find_package(VTK REQUIRED)
 include(${VTK_USE_FILE})
 
 
