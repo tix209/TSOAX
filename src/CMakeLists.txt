@@ -27,7 +27,7 @@ if (APPLE)
   set_source_files_properties(${ICON_FILE} PROPERTIES
     MACOSX_PACKAGE_LOCATION Resources)
 
-  set(COPYRIGHT "Copyright (c) 2016 Lehigh University. All rights reserved.")
+  set(COPYRIGHT "Copyright (c) 2017 Lehigh University. All rights reserved.")
   set(IDENTIFIER "edu.lehigh.troax")
 
   set(MACOSX_BUNDLE_BUNDLE_NAME ${PROJECT_NAME})
@@ -38,6 +38,8 @@ if (APPLE)
   set(MACOSX_BUNDLE_ICON_FILE ${ICON_NAME})
   add_executable(troax MACOSX_BUNDLE ${SRCS} osx_helper.mm icons.qrc
     ${ICON_FILE})
+  set_target_properties(troax PROPERTIES MACOSX_BUNDLE_INFO_PLIST
+    ../troax/CMakeModules/TroaxBundleInfo.plist.in)
 else (APPLE)
   add_executable(troax ${SRCS} icons.qrc)
 endif (APPLE)
