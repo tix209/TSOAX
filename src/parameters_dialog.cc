@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015 Lehigh University.
+ * Copyright (C) 2017 Lehigh University.
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -84,6 +84,7 @@ void ParametersDialog::SetParameters(const SnakeParameters *sp) {
   damp_z_check_->setChecked(sp->damp_z());
   association_threshold_edit_->setText(
       QString::number(sp->association_threshold()));
+  c_edit_->setText(QString::number(sp->c()));
 }
 
 double ParametersDialog::GetIntensityScaling() const {
@@ -202,6 +203,10 @@ double ParametersDialog::GetAssociationThreshold() const {
   return association_threshold_edit_->text().toDouble();
 }
 
+double ParametersDialog::GetC() const {
+  return c_edit_->text().toDouble();
+}
+
 /****************** Private Methods ********************/
 
 QGroupBox *ParametersDialog::CreateSettings() {
@@ -241,6 +246,7 @@ QGroupBox *ParametersDialog::CreateSettings() {
   grouping_delta_edit_ = new QLineEdit("0");
   direction_threshold_edit_ = new QLineEdit("0.0");
   association_threshold_edit_ = new QLineEdit("0.0");
+  c_edit_ = new QLineEdit("0.0");
 
   damp_z_check_ = new QCheckBox(tr(""));
   damp_z_check_->setChecked(false);
@@ -285,6 +291,7 @@ QGroupBox *ParametersDialog::CreateSettings() {
                      direction_threshold_edit_);
   right_form->addRow(tr("Association Threshold (pixels)"),
                      association_threshold_edit_);
+  right_form->addRow(tr("C"), c_edit_);
 
   QHBoxLayout *hbox = new QHBoxLayout;
   hbox->addLayout(left_form);

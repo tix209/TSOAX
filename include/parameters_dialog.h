@@ -68,6 +68,7 @@ class ParametersDialog : public QDialog {
   double GetDirectionThreshold() const;
   bool DampZ() const;
   double GetAssociationThreshold() const;
+  double GetC() const;
 
 
   /*
@@ -108,6 +109,7 @@ class ParametersDialog : public QDialog {
   QLineEdit *direction_threshold_edit_;
   QCheckBox *damp_z_check_;
   QLineEdit *association_threshold_edit_;
+  QLineEdit *c_edit_;
 
   QDialogButtonBox *ok_cancel_;
 

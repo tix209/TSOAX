@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015 Lehigh University.
+ * Copyright (C) 2017 Lehigh University.
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -66,6 +66,7 @@ std::string SnakeParameters::ToString() const {
      << std::endl;
   os << "damp-z\t" << damp_z_ << std::endl;
   os << "association-threshold\t" << association_threshold_ << std::endl;
+  os << "c\t" << c_ << std::endl;
   os << std::noboolalpha;
   return os.str();
 }
@@ -130,6 +131,12 @@ bool SnakeParameters::Valid() const {  // todo: complete parameter constraints
     return false;
   }
 
+  if (c_ <= 0.0) {
+    std::cerr << "Parameter C for curve similarity must be positive."
+              << std::endl;
+    return false;
+  }
+  
   return true;
 }
 
@@ -225,6 +232,8 @@ void SnakeParameters::AssignParameters(const std::string &name,
     damp_z_ = (value == "true");
   } else if (name == "association-threshold") {
     association_threshold_ = std::stod(value);
+  } else if (name == "c") {
+    c_ = std::stod(value);
   }
 }
 

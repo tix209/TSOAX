@@ -126,6 +126,9 @@ class SnakeParameters {
     association_threshold_ = threshold;
   }
 
+  double c() const {return c_;}
+  void set_c(double c) {c_ = c;}
+
   std::string ToString() const;
 
   bool Valid() const;
@@ -260,6 +263,11 @@ class SnakeParameters {
    * tracking.
    */
   double association_threshold_ = 10.0;
+
+  /**
+   * Factor that scale the curve similarity.
+   */
+  double c_ = 0.2;
 
   unsigned snake_id_counter_ = 0;
 };

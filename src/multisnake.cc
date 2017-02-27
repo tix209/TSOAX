@@ -946,7 +946,8 @@ int Multisnake::FindTrack(Snake *s) const {
 void Multisnake::ComputeCurveDistanceMatrix(Matrix<double> *distance,
                                             double threshold) {
   // UpdateSnakeCentroid();
-  const double c = 0.2;
+  // const double c = 0.2;
+  const double c = snake_parameters_->c();
   for (size_t i = 0; i < converged_snake_sequence_.size() - 1; i++) {
     for (size_t j = i + 1; j < converged_snake_sequence_.size(); j++) {
       for (size_t k = 0; k < converged_snake_sequence_[i].size(); k++) {
