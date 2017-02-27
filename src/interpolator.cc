@@ -108,13 +108,13 @@ int Interpolator::GetNumberOfComponents() const {
 }
 
 void Interpolator::GetImageSize(int *size) const {
-  size[0] = interp_->GetWholeExtent()[1] + 1;
-  size[1] = interp_->GetWholeExtent()[3] + 1;
-  size[2] = interp_->GetWholeExtent()[5] + 1;
+  size[0] = interp_->GetExtent()[1] + 1;
+  size[1] = interp_->GetExtent()[3] + 1;
+  size[2] = interp_->GetExtent()[5] + 1;
 }
 
 int Interpolator::GetImageExtent(int index) const {
-  return interp_->GetWholeExtent()[2 * index + 1];
+  return interp_->GetExtent()[2 * index + 1];
 }
 
 /****************** Private Methods ******************/
