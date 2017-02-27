@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015 Lehigh University.
+ * Copyright (C) 2017 Lehigh University.
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -128,6 +128,9 @@ class SnakeParameters {
 
   double c() const {return c_;}
   void set_c(double c) {c_ = c;}
+
+  bool grouping() const {return grouping_;}
+  void set_grouping(bool grouping) {grouping_ = grouping;}
 
   std::string ToString() const;
 
@@ -268,6 +271,8 @@ class SnakeParameters {
    * Factor that scale the curve similarity.
    */
   double c_ = 0.2;
+
+  bool grouping_ = true;
 
   unsigned snake_id_counter_ = 0;
 };

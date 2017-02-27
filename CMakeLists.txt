@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0.0 FATAL_ERROR)
 
-project(troax)
+project(Troax)
 
 if (CMAKE_BUILD_TYPE MATCHES "Debug")
   if(MSVC) # MSVC compiler (Win32 only)

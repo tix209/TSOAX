@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015 Lehigh University.
+ * Copyright (C) 2017 Lehigh University.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -69,7 +69,7 @@ class ParametersDialog : public QDialog {
   bool DampZ() const;
   double GetAssociationThreshold() const;
   double GetC() const;
-
+  bool Grouping() const;
 
   /*
    * Set the LineEdit values from the initial default.
@@ -110,6 +110,7 @@ class ParametersDialog : public QDialog {
   QCheckBox *damp_z_check_;
   QLineEdit *association_threshold_edit_;
   QLineEdit *c_edit_;
+  QCheckBox *grouping_check_;
 
   QDialogButtonBox *ok_cancel_;
 

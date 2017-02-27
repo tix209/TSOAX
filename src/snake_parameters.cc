@@ -67,6 +67,7 @@ std::string SnakeParameters::ToString() const {
   os << "damp-z\t" << damp_z_ << std::endl;
   os << "association-threshold\t" << association_threshold_ << std::endl;
   os << "c\t" << c_ << std::endl;
+  os << "grouping\t" << grouping_ << std::endl;
   os << std::noboolalpha;
   return os.str();
 }
@@ -136,7 +137,6 @@ bool SnakeParameters::Valid() const {  // todo: complete parameter constraints
               << std::endl;
     return false;
   }
-  
   return true;
 }
 
@@ -234,6 +234,8 @@ void SnakeParameters::AssignParameters(const std::string &name,
     association_threshold_ = std::stod(value);
   } else if (name == "c") {
     c_ = std::stod(value);
+  } else if (name == "grouping") {
+    grouping_ = (value == "true");
   }
 }
 

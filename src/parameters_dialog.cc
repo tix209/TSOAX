@@ -85,6 +85,7 @@ void ParametersDialog::SetParameters(const SnakeParameters *sp) {
   association_threshold_edit_->setText(
       QString::number(sp->association_threshold()));
   c_edit_->setText(QString::number(sp->c()));
+  grouping_check_->setChecked(sp->grouping());
 }
 
 double ParametersDialog::GetIntensityScaling() const {
@@ -207,6 +208,10 @@ double ParametersDialog::GetC() const {
   return c_edit_->text().toDouble();
 }
 
+bool ParametersDialog::Grouping() const {
+  return grouping_check_->isChecked();
+}
+
 /****************** Private Methods ********************/
 
 QGroupBox *ParametersDialog::CreateSettings() {
@@ -248,15 +253,15 @@ QGroupBox *ParametersDialog::CreateSettings() {
   association_threshold_edit_ = new QLineEdit("0.0");
   c_edit_ = new QLineEdit("0.0");
 
-  damp_z_check_ = new QCheckBox(tr(""));
+  damp_z_check_ = new QCheckBox(tr("Damp Z"));
   damp_z_check_->setChecked(false);
-  QHBoxLayout *hbox2 = new QHBoxLayout;
-  hbox2->addWidget(damp_z_check_);
-  hbox2->addStretch();
+  grouping_check_ = new QCheckBox(tr("Grouping "));
+  grouping_check_->setChecked(false);
 
   QFormLayout *left_form  = new QFormLayout;
   left_form->addRow(tr("Intensity Scaling (0 for automatic)"),
                     intensity_scaling_edit_);
+  left_form->addRow(tr("Background Z/XY Ratio (pixels)"), z_spacing_edit_);
   left_form->addRow(tr("Gaussian Std (pixels)"), sigma_edit_);
   left_form->addRow(tr("Ridge Threshold (tau)"), ridge_threshold_edit_);
   left_form->addRow(tr("Maximum foreground"), maximum_foreground_edit_);
@@ -268,7 +273,7 @@ QGroupBox *ParametersDialog::CreateSettings() {
   left_form->addRow(tr("Check Period"), check_period_edit_);
   left_form->addRow(tr("Delta (SOAC points)"), delta_edit_);
   left_form->addRow(tr("Initialization Directions"), hbox1);
-  left_form->addRow(tr("Damp Z"), hbox2);
+  left_form->addRow(tr(""), damp_z_check_);
 
   QFormLayout *right_form  = new QFormLayout;
   right_form->addRow(tr("Alpha"), alpha_edit_);
@@ -280,7 +285,6 @@ QGroupBox *ParametersDialog::CreateSettings() {
                      number_of_sectors_edit_);
   right_form->addRow(tr("Radial Near (pixels)"), radial_near_edit_);
   right_form->addRow(tr("Radial Far (pixels)"), radial_far_edit_);
-  right_form->addRow(tr("Background Z/XY Ratio (pixels)"), z_spacing_edit_);
   right_form->addRow(tr("Overlap Threshold (pixels)"),
                      overlap_threshold_edit_);
   right_form->addRow(tr("Grouping Distance Threshold (pixels)"),
@@ -292,10 +296,12 @@ QGroupBox *ParametersDialog::CreateSettings() {
   right_form->addRow(tr("Association Threshold (pixels)"),
                      association_threshold_edit_);
   right_form->addRow(tr("C"), c_edit_);
+  right_form->addRow(tr(""), grouping_check_);
 
   QHBoxLayout *hbox = new QHBoxLayout;
   hbox->addLayout(left_form);
   hbox->addLayout(right_form);
+
   gp->setLayout(hbox);
   return gp;
 }

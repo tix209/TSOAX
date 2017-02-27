@@ -16,7 +16,7 @@
  *
  * Author: Ting Xu (xuting.bme@gmail.com)
  *
- * This file implements the main window of the TROAX program.
+ * This file implements the main window of the Troax program.
  */
 
 
@@ -83,7 +83,7 @@ MainWindow::MainWindow() {
   CreateProgressBar();
 
   setWindowIcon(QIcon(":/icon/Letter-T.png"));
-  setWindowTitle("TROAX");
+  setWindowTitle("Troax");
   setUnifiedTitleAndToolBarOnMac(true);
 
   ResetActions();
@@ -112,7 +112,7 @@ void MainWindow::OpenImageFile() {
   if (msg.exec() == QMessageBox::Yes) {
     bool ok;
     int nslices_per_frame = QInputDialog::getInt(
-        this, tr("TROAX"), tr("How many z-slices does each frame have?"),
+        this, tr("Troax"), tr("How many z-slices does each frame have?"),
         1, 1, 2147483647, 1, &ok);
     if (ok) {
       reader_->set_nslices_per_frame(nslices_per_frame);
@@ -347,7 +347,7 @@ void MainWindow::CloseSession() {
 
   open_image_file_->setEnabled(true);
   open_image_dir_->setEnabled(true);
-  setWindowTitle("TROAX");
+  setWindowTitle("Troax");
 
   track_examined_ = 0;
   stepsize_ = 0;
@@ -377,7 +377,7 @@ void MainWindow::ShowTracks() {
     QString question = QString("# of tracks to check: (max: ") +
                        QString::number(max_tracks) + ")";
     int num_tracks = QInputDialog::getInt(
-        this, tr("TROAX"), question, 2, 2, static_cast<int>(max_tracks), 1, &ok);
+        this, tr("Troax"), question, 2, 2, static_cast<int>(max_tracks), 1, &ok);
     stepsize_ = max_tracks / num_tracks;
   }
 
@@ -466,8 +466,10 @@ void MainWindow::DeformSnakes() {
     std::cout << "Extracting frame " << i << "..." << std::endl;
     progress_bar_->setMaximum(static_cast<int>(multisnake_->GetNumberOfInitialSnakes()));
     multisnake_->Evolve();
-    multisnake_->Reconfigure(i);
-    // multisnake_->ReconfigureWithoutGrouping(i);
+    if (multisnake_->snake_parameters()->grouping())
+      multisnake_->Reconfigure(i);
+    else
+      multisnake_->ReconfigureWithoutGrouping(i);
   }
   time(&end);
   double time_elasped = difftime(end, start);
@@ -649,6 +651,10 @@ void MainWindow::ShowParametersDialog() {
         parameters_dialog_->DampZ());
     multisnake_->snake_parameters()->set_association_threshold(
         parameters_dialog_->GetAssociationThreshold());
+    multisnake_->snake_parameters()->set_c(
+        parameters_dialog_->GetC());
+    multisnake_->snake_parameters()->set_grouping(
+        parameters_dialog_->Grouping());
   }
 }
 
@@ -680,15 +686,16 @@ void MainWindow::SaveSnapshot() {
   viewer_->SaveWindowImage(filename);
 }
 
-void MainWindow::AboutTROAX() {
+void MainWindow::AboutTroax() {
   QMessageBox::about(
-      this, tr("About TROAX"),
-      tr("<h3>TROAX 4.0</h3>"
-         "<p style=\"font-size:12pt\">Copyright (C) 2016 Lehigh University.</p>"
-         "<p style=\"font-size:11pt;font-weight:normal\">"
-         "TROAX extracts curvilinear network structure and "
-         "tracks their dynamics from 2D/3D biomedical image sequence. "
-         "This work is supported by NIH grant R01GM098430.</p>"));
+      this, tr("About Troax"),
+      tr("<h3>Troax v0.1</h3>"
+         "<p style=\"font-weight:normal\">"
+         "Troax extracts curvilinear network structures and "
+         "tracks their dynamics from multi-dimensional image sequence. "
+         "This work is supported by NIH grant R01GM098430.</p>\n"
+         "<p style=\"font-weight:normal\">"
+         "Copyright (C) 2017 Lehigh University.</p>" ));
 }
 
 void MainWindow::TogglePlanes(bool state) {
@@ -713,7 +720,7 @@ void MainWindow::ToggleBoundingBox(bool state) {
 }
 
 void MainWindow::UpdateWindowTitle(int index) {
-  setWindowTitle(QString("TROAX - ") + reader_->GetFilePath(index));
+  setWindowTitle(QString("Troax - ") + reader_->GetFilePath(index));
 }
 
 void MainWindow::UpdateFrameNumber(int index) {
@@ -1021,7 +1028,7 @@ void MainWindow::CreateToolsMenuActions() {
 
 void MainWindow::CreateHelpMenuActions() {
   about_troax_ = help_->addAction(
-      tr("About TROAX"), this, SLOT(AboutTROAX()));
+      tr("About Troax"), this, SLOT(AboutTroax()));
   addAction(about_troax_);
 
   about_qt_ = help_->addAction(tr("About Qt"), qApp, SLOT(aboutQt()));
@@ -1029,7 +1036,7 @@ void MainWindow::CreateHelpMenuActions() {
 }
 
 void MainWindow::CreateToolBar() {
-  toolbar_ = addToolBar(tr("TROAX Toolbar"));
+  toolbar_ = addToolBar(tr("Troax Toolbar"));
   // toolbar_->setMovable(false); // eliminate crash if you try to move toolbar in OSX
   // toolbar_->setFloatable(false);
   // toolbar_->setAllowedAreas(Qt::LeftToolBarArea);

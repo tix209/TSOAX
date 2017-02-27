@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016 Lehigh University.
+ * Copyright (C) 2017 Lehigh University.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -16,7 +16,7 @@
  *
  * Author: Ting Xu (xuting.bme@gmail.com)
  *
- * This class is the main window of the TROAX program.
+ * This class is the main window of the Troax program.
  */
 
 
@@ -81,7 +81,7 @@ class MainWindow : public QMainWindow {
   void SaveViewpoint();
   void SaveSnapshot();
 
-  void AboutTROAX();
+  void AboutTroax();
 
   void TogglePlanes(bool state);
   void ToggleVolumeRendering(bool state);
