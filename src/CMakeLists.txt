@@ -1,4 +1,4 @@
-#set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON) # For meta object compiler
 set(CMAKE_AUTORCC ON) # Resource files
 set(CMAKE_AUTOUIC ON) # UI files
@@ -30,7 +30,7 @@ if (APPLE)
   set(COPYRIGHT "Copyright (c) 2017 Lehigh University. All rights reserved.")
   set(IDENTIFIER "edu.lehigh.troax")
 
-  set(PROJECT_VERSION 0.1.0)
+  set(PROJECT_VERSION 0.1.1)
   set(MACOSX_BUNDLE_BUNDLE_NAME ${PROJECT_NAME})
   set(MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION})
   set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION})
@@ -40,7 +40,7 @@ if (APPLE)
   add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${SRCS} osx_helper.mm icons.qrc
     ${ICON_FILE})
   set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST
-    ../troax/CMakeModules/TroaxBundleInfo.plist.in)
+    ${CMAKE_SOURCE_DIR}/TroaxBundleInfo.plist.in)
 else (APPLE)
   add_executable(${PROJECT_NAME} ${SRCS} icons.qrc)
 endif (APPLE)
