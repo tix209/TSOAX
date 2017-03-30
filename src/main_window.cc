@@ -215,40 +215,6 @@ void MainWindow::LoadSnakes() {
   show_tracks_->setEnabled(true);
 }
 
-// void MainWindow::LoadTamaraSnakes() {
-//   QString directory = QFileDialog::getExistingDirectory(
-//       this, tr("Open an Curve Folder"), "..",
-//       QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-//   if (directory.isEmpty())  return;
-//   std::cout << "load curve folder." << std::endl;
-
-//   QDir dir(directory);
-//   dir.setFilter(QDir::Files | QDir::NoDotAndDotDot);
-//   dir.setSorting(QDir::Name);
-//   QString filename;
-//   foreach(filename, dir.entryList()) {
-//     std::string abs_path = dir.absoluteFilePath(filename).toStdString();
-
-//     if (multisnake_->LoadTamaraSnakes(dir.absoluteFilePath(filename))) {
-//       std::cout << abs_path << std::endl;
-//     } else {
-//       break;
-//     }
-//   }
-
-//   auto count = multisnake_->GetNumberOfConvergedSnakesInSequence();
-//   for_each(count.begin(), count.end(),
-//            [](size_t i) {std::cout << i << " ";});
-//   std::cout << std::endl;
-//   toggle_snakes_->setEnabled(true);
-//   toggle_snakes_->setChecked(true);
-//   UpdateSnakeView(scroll_bar_->value());
-//   connect(scroll_bar_, SIGNAL(valueChanged(int)),
-//           this, SLOT(UpdateSnakeView(int)));
-//   viewer_->Render();
-//   show_tracks_->setEnabled(true);
-// }
-
 void MainWindow::SaveSnakes() {
   QString filename = QFileDialog::getSaveFileName(
       this, tr("Save Snakes"), multisnake_->path(),
@@ -277,11 +243,6 @@ void MainWindow::SaveSnakes() {
   multisnake_->set_path(filename);
 
   statusBar()->showMessage(QString("Snakes are saved in ") + filename);
-
-  // if (multisnake_->SaveConvergedSnakes(filename, reader_->GetFilePath()))
-  //   statusBar()->showMessage(QString("Snakes are saved in ") + filename);
-  // else
-  //   statusBar()->showMessage("Problem occurred saving snakes!");
 }
 
 void MainWindow::CompareSnakes() {
@@ -428,8 +389,7 @@ void MainWindow::InitializeSnakes() {
   QString msg = QString::number(multisnake_->GetNumberOfInitialSnakes()) +
                 " snakes initialized.";
   statusBar()->showMessage(msg);
-  // multisnake_->PrintInitialSnakes(std::cout);
-  // Update the snakes
+
   viewer_->RemoveSnakes();
   viewer_->SetupSnakes(multisnake_->initial_snakes());
 
@@ -498,92 +458,7 @@ void MainWindow::DeformSnakes() {
   show_tracks_->setEnabled(true);
 }
 
-// void MainWindow::TrackSnakes() {
-// multisnake_->DeleteConvergedSnakeSequence();
-// std::cout << "============ Parameters ============" << std::endl;
-// std::cout << multisnake_->snake_parameters()->ToString() << std::endl;
-// std::cout << "====================================" << std::endl;
-
-// connect(multisnake_, SIGNAL(ExtractionProgressed(int)),
-//         progress_bar_, SLOT(setValue(int)));
-
-// time_t start, end;
-// time(&start);
-// for (size_t i = 0; i < reader_->GetNumberOfImages(); i++) {
-//   multisnake_->set_image(reader_->GetImage(i));
-//   if (i == 0)
-//     multisnake_->Initialize();
-//   else
-//     multisnake_->CopyConvergedToInitial(i - 1);
-//   std::cout << "Extracting frame " << i << "..." << std::endl;
-//   progress_bar_->setMaximum(multisnake_->GetNumberOfInitialSnakes());
-
-//   multisnake_->Evolve(i == 0);
-//   if (i == 0)
-//     multisnake_->InitializeConvergedTrack(reader_->GetNumberOfImages());
-//   else
-//     multisnake_->UpdateConvergedTrack(multisnake_->GetConvergedSnakes(i), i);
-// }
-// time(&end);
-// double time_elasped = difftime(end, start) / 60.0;
-// std::cout << "Extraction completed in "
-//           << time_elasped << "m" << std::endl;
-// multisnake_->UpdateIdSnakeMap();
-
-// toggle_snakes_->setEnabled(true);
-// toggle_snakes_->setChecked(true);
-// UpdateSnakeView(scroll_bar_->value());
-// connect(scroll_bar_, SIGNAL(valueChanged(int)),
-//         this, SLOT(UpdateSnakeView(int)));
-
-// toggle_junctions_->setEnabled(true);
-// toggle_junctions_->setChecked(true);
-// UpdateJunctionView(scroll_bar_->value());
-// connect(scroll_bar_, SIGNAL(valueChanged(int)),
-//         this, SLOT(UpdateJunctionView(int)));
-
-// save_snakes_->setEnabled(true);
-// }
-
-// void MainWindow::TrackSnakesFinal() {
-//   multisnake_->DeleteConvergedSnakeSequence();
-//   std::cout << "============ Parameters ============" << std::endl;
-//   std::cout << multisnake_->snake_parameters()->ToString() << std::endl;
-//   std::cout << "====================================" << std::endl;
-
-//   time_t start, end;
-//   time(&start);
-//   multisnake_->set_image(reader_->GetImage(0));
-//   multisnake_->Initialize();
-//   multisnake_->Evolve();
-//   multisnake_->InitializeConvergedTrack(reader_->GetNumberOfImages());
-//   for (size_t i = 1; i < reader_->GetNumberOfImages(); i++) {
-//     multisnake_->set_image(reader_->GetImage(i));
-//     multisnake_->EvolveNetwork(i);
-//   }
-//   time(&end);
-//   double time_elasped = difftime(end, start) / 60.0;
-//   std::cout << "Extraction completed in "
-//             << time_elasped << "m" << std::endl;
-//   multisnake_->UpdateIdSnakeMap();
-
-//   toggle_snakes_->setEnabled(true);
-//   toggle_snakes_->setChecked(true);
-//   UpdateSnakeView(scroll_bar_->value());
-//   connect(scroll_bar_, SIGNAL(valueChanged(int)),
-//           this, SLOT(UpdateSnakeView(int)));
-
-//   toggle_junctions_->setEnabled(true);
-//   toggle_junctions_->setChecked(true);
-//   UpdateJunctionView(scroll_bar_->value());
-//   connect(scroll_bar_, SIGNAL(valueChanged(int)),
-//           this, SLOT(UpdateJunctionView(int)));
-
-//   save_snakes_->setEnabled(true);
-// }
-
 void MainWindow::SolveCorrespondence() {
-  // multisnake_->InitializeConvergedTrack(reader_->GetNumberOfImages());
   statusBar()->showMessage("Solving correspondence...");
   multisnake_->SolveCorrespondence(reader_->GetNumberOfImages());
   statusBar()->showMessage("Correspondence solved.");
@@ -689,7 +564,7 @@ void MainWindow::SaveSnapshot() {
 void MainWindow::AboutTroax() {
   QMessageBox::about(
       this, tr("About Troax"),
-      tr("<h3>Troax v0.1</h3>"
+      tr("<h3>Troax v0.1.1</h3>"
          "<p style=\"font-weight:normal\">"
          "Troax extracts curvilinear network structures and "
          "tracks their dynamics from multi-dimensional image sequence. "
@@ -850,10 +725,6 @@ void MainWindow::CreateFileMenuActions() {
       this, SLOT(LoadSnakes()), QKeySequence(Qt::CTRL + Qt::Key_L));
   addAction(load_snakes_);
 
-  // load_tamara_snakes_ = file_->addAction(tr("Load Tamara Snakes"),
-  //                                        this, SLOT(LoadTamaraSnakes()));
-  // addAction(load_tamara_snakes_);
-
   save_snakes_ = file_->addAction(
       QIcon(":/icon/Save.png"), tr("Save Snakes"),
       this, SLOT(SaveSnakes()), QKeySequence::Save);
@@ -991,15 +862,6 @@ void MainWindow::CreateProcessMenuActions() {
       SLOT(DeformSnakes()), QKeySequence((Qt::CTRL + Qt::Key_D)));
   addAction(deform_snakes_);
 
-  // track_snakes_ = process_->addAction(tr("Track Snakes"), this,
-  //                                     SLOT(TrackSnakes()),
-  //                                     QKeySequence((Qt::CTRL + Qt::Key_T)));
-  // addAction(track_snakes_);
-
-  // track_snakes_final_ = process_->addAction(tr("Track Snakes Final"), this,
-  //                                           SLOT(TrackSnakesFinal()));
-  // addAction(track_snakes_final_);
-
   solve_correspondence_ = process_->addAction(tr("Solve Correspondence"), this,
                                               SLOT(SolveCorrespondence()));
   addAction(solve_correspondence_);
@@ -1037,9 +899,6 @@ void MainWindow::CreateHelpMenuActions() {
 
 void MainWindow::CreateToolBar() {
   toolbar_ = addToolBar(tr("Troax Toolbar"));
-  // toolbar_->setMovable(false); // eliminate crash if you try to move toolbar in OSX
-  // toolbar_->setFloatable(false);
-  // toolbar_->setAllowedAreas(Qt::LeftToolBarArea);
   toolbar_->addAction(open_image_file_);
   toolbar_->addAction(load_parameters_);
   toolbar_->addAction(save_snakes_);
@@ -1105,8 +964,6 @@ void MainWindow::ResetActions() {
 
   initialize_snakes_->setEnabled(false);
   deform_snakes_->setEnabled(false);
-  // track_snakes_->setEnabled(false);
-  // track_snakes_final_->setEnabled(false);
   solve_correspondence_->setEnabled(false);
   show_parameters_->setEnabled(false);
 }
@@ -1159,8 +1016,6 @@ void MainWindow::ShowImage() {
 
   initialize_snakes_->setEnabled(true);
   deform_snakes_->setEnabled(true);
-  // track_snakes_->setEnabled(true);
-  // track_snakes_final_->setEnabled(true);
 
   load_viewpoint_->setEnabled(true);
   save_viewpoint_->setEnabled(true);
