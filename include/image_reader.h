@@ -142,13 +142,17 @@ class ImageReader {
    */
   int ExtractIndex(const QString &filename) const;
 
-
+  /**
+   * The path of input directory.
+   */
   QString path_ = "..";
+  /**
+   * A list of paths of input images.
+   */
+  QStringList paths_;
   int nslices_per_frame_ = 0;
 
   std::vector<vtkImageData *> images_;
-  QStringList paths_;
-  QStringList filenames_;
   QSet<QString> allowed_format_;
 
   ImageReader(const ImageReader &);

@@ -159,7 +159,8 @@ void MainWindow::SaveIsotropicImage() {
   ImageResampler resampler;
   for (std::size_t i = 0; i < reader_->GetNumberOfImages(); ++i) {
     QString path = QDir::toNativeSeparators(
-        dir + "/" + reader_->GetFileNameWithoutSuffix(i) + "_iso.tif");
+        dir + "/" + reader_->GetFileNameWithoutSuffix(i) + "_iso_"
+        + QString::number(i) + ".tif");
     resampler.Resize(reader_->GetImage(i), z_spacing);
     resampler.WriteImage(path.toStdString());
   }
@@ -566,12 +567,12 @@ void MainWindow::AboutTroax() {
   QMessageBox::about(
       this, tr("About Troax"),
       tr("<center><h3>Troax</h3>"
-         "\n<p style=\"font-size:12px; font-weight:normal\">Version 0.1.2</p>\n"
+         "\n<p style=\"font-size:12px; font-weight:normal\">Version 0.1.3</p>\n"
          "<p style=\"font-size:12px;font-weight:normal\">"
          "Troax delineates centerlines of curvilinear networks from 2D/3D images. It also tracks network dynamics from 2D/3D videos. This work is supported by NIH grant R01GM098430.</p>\n"
          "\n<p><a href=\"https://github.com/tix209/troax\">Troax website</a></p>\n"
          "\n<p style=\"font-size:12px; font-weight:normal\">"
-         "Copyright (C) 2017 Lehigh University.</p></center>" ));
+         "&copy; 2017 Lehigh University.</p></center>" ));
 }
 
 void MainWindow::TogglePlanes(bool state) {

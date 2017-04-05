@@ -63,10 +63,10 @@ void ImageReader::ReadDir(const QString &directory) {
   QDir dir(directory);
   dir.setFilter(QDir::Files | QDir::NoDotAndDotDot);
   dir.setSorting(QDir::Name);
-  filenames_ = SortFilenames(dir.entryList());
+  QStringList filenames = SortFilenames(dir.entryList());
 
   QString name;
-  foreach(name, filenames_) {
+  foreach(name, filenames) {
     QString path = dir.absoluteFilePath(name);
     vtkImageReader2 *reader = vtkImageReader2Factory::CreateImageReader2(
         path.toStdString().c_str());
@@ -108,10 +108,11 @@ QString ImageReader::GetFilePath(size_t index) const {
 }
 
 QString ImageReader::GetFileNameWithoutSuffix(size_t index) const {
-  assert(!filenames_.empty());
-  QString name = filenames_[index];
-  name.truncate(name.lastIndexOf("."));
-  return name;
+  if (nslices_per_frame_) { // multiple frames in a single file
+    return QFileInfo(paths_[0]).baseName();
+  } else {
+    return QFileInfo(this->GetFilePath(index)).baseName();
+  }
 }
 
 QString ImageReader::GetAllowedFormatAsString() const {
@@ -127,7 +128,6 @@ QString ImageReader::GetAllowedFormatAsString() const {
 
 void ImageReader::Reset() {
   paths_.clear();
-  filenames_.clear();
   DeleteImages();
   images_.clear();
   nslices_per_frame_ = 0;
