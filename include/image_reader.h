@@ -148,6 +148,7 @@ class ImageReader {
 
   std::vector<vtkImageData *> images_;
   QStringList paths_;
+  QStringList filenames_;
   QSet<QString> allowed_format_;
 
   ImageReader(const ImageReader &);

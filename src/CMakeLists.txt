@@ -30,7 +30,7 @@ if (APPLE)
   set(COPYRIGHT "Copyright (c) 2017 Lehigh University. All rights reserved.")
   set(IDENTIFIER "edu.lehigh.troax")
 
-  set(PROJECT_VERSION 0.1.1)
+  set(PROJECT_VERSION 0.1.2)
   set(MACOSX_BUNDLE_BUNDLE_NAME ${PROJECT_NAME})
   set(MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION})
   set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION})
