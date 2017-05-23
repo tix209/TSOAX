@@ -55,9 +55,8 @@ class VolumeRendering {
    * Update the display range based on the image intensity.
    */
   void UpdateDisplayRange(vtkImageData *image);
-
   void SetupBoundingBox();
-
+  void SetupSmartVolumeMapper(vtkImageData *image);
 
   vtkVolume * volume_ = nullptr;
   vtkActor *bounding_box_ = nullptr;

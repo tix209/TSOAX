@@ -58,12 +58,7 @@ VolumeRendering::VolumeRendering(vtkImageData *image) {
   mip_volume_property->SetInterpolationTypeToLinear();
   volume_->SetProperty(mip_volume_property);
 
-  vtkSmartVolumeMapper *mapper = vtkSmartVolumeMapper::New();
-  mapper->SetBlendModeToMaximumIntensity();
-  mapper->SetInputData(image);
-  volume_->SetMapper(mapper);
-
-  mapper->Delete();
+  this->SetupSmartVolumeMapper(image);
   opacity_function->Delete();
   color_function->Delete();
   mip_volume_property->Delete();
@@ -77,11 +72,7 @@ VolumeRendering::~VolumeRendering() {
 }
 
 void VolumeRendering::Update(vtkImageData *image) {
-  vtkSmartVolumeMapper *mapper = vtkSmartVolumeMapper::New();
-  mapper->SetBlendModeToMaximumIntensity();
-  mapper->SetInputData(image);
-  volume_->SetMapper(mapper);
-  mapper->Delete();
+  this->SetupSmartVolumeMapper(image);
   UpdateDisplayRange(image);
   SetDisplayRange(min_intensity_, max_intensity_);
 }
@@ -137,6 +128,15 @@ void VolumeRendering::SetupBoundingBox() {
   bounding_box_->GetProperty()->SetDiffuse(0.0);
   outline->Delete();
   outline_mapper->Delete();
+}
+
+void VolumeRendering::SetupSmartVolumeMapper(vtkImageData *image) {
+  vtkSmartVolumeMapper *mapper = vtkSmartVolumeMapper::New();
+  mapper->SetBlendModeToMaximumIntensity();
+  mapper->SetRequestedRenderModeToRayCast();
+  mapper->SetInputData(image);
+  volume_->SetMapper(mapper);
+  mapper->Delete();
 }
 
 }  // namespace soax
