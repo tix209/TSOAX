@@ -29,6 +29,7 @@
 #include "vtkPiecewiseFunction.h"
 #include "vtkColorTransferFunction.h"
 #include "vtkSmartVolumeMapper.h"
+#include "vtkFixedPointVolumeRayCastMapper.h"
 #include "vtkActor.h"
 #include "vtkPolyDataMapper.h"
 #include "vtkOutlineSource.h"
@@ -132,8 +133,10 @@ void VolumeRendering::SetupBoundingBox() {
 
 void VolumeRendering::SetupSmartVolumeMapper(vtkImageData *image) {
   vtkSmartVolumeMapper *mapper = vtkSmartVolumeMapper::New();
+  // vtkFixedPointVolumeRayCastMapper *mapper = vtkFixedPointVolumeRayCastMapper::New();
   mapper->SetBlendModeToMaximumIntensity();
-  mapper->SetRequestedRenderModeToRayCast();
+  // mapper->SetBlendModeToMinimumIntensity();
+  mapper->SetRequestedRenderModeToDefault();
   mapper->SetInputData(image);
   volume_->SetMapper(mapper);
   mapper->Delete();

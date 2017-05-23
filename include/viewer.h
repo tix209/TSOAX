@@ -31,6 +31,8 @@
 #include "./util.h"
 
 class QVTKWidget;
+class QVTKOpenGLWidget;
+class vtkGenericOpenGLRenderWindow;
 class vtkRenderer;
 class vtkOrientationMarkerWidget;
 class vtkCornerAnnotation;
@@ -50,7 +52,7 @@ class Viewer : public QObject {
   Q_OBJECT
 
  public:
-  explicit Viewer(QVTKWidget *qvtk);
+  explicit Viewer(QVTKOpenGLWidget *qvtk);
 
   ~Viewer();
 
@@ -219,7 +221,8 @@ class Viewer : public QObject {
   void RemovePointActor(JunctionActor *actor);
   void SetupPointActor(JunctionActor **actor, const PointContainer &points);
 
-  QVTKWidget *qvtk_ = nullptr;
+  QVTKOpenGLWidget *qvtk_ = nullptr;
+  vtkGenericOpenGLRenderWindow *window_ = nullptr;
   vtkRenderer *renderer_;
 
   ImagePlane *image_plane_ = nullptr;

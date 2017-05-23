@@ -33,6 +33,7 @@
 #include <QVBoxLayout>
 #include <QInputDialog>
 #include "QVTKWidget.h"
+#include "QVTKOpenGLWidget.h"
 
 #include "include/image_reader.h"
 #include "include/viewer.h"
@@ -55,7 +56,7 @@
 namespace soax {
 
 MainWindow::MainWindow() {
-  qvtk_ = new QVTKWidget(this);
+  qvtk_ = new QVTKOpenGLWidget(this);
 
   reader_ = new ImageReader;
   viewer_ = new Viewer(qvtk_);

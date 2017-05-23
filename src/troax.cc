@@ -22,8 +22,10 @@
 
 #include <QApplication>
 #include "include/main_window.h"
+#include "QVTKOpenGLWidget.h"
 
 int main(int argc, char **argv) {
+  QSurfaceFormat::setDefaultFormat(QVTKOpenGLWidget::defaultFormat());
   QApplication app(argc, argv);
 #ifdef __APPLE__
   app.setAttribute(Qt::AA_UseHighDpiPixmaps);

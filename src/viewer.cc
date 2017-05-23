@@ -25,6 +25,7 @@
 #include <QFileInfo>
 #include <QString>
 #include "QVTKWidget.h"
+#include "QVTKOpenGLWidget.h"
 #include "QVTKInteractor.h"
 #include "vtkRenderer.h"
 #include "vtkImageData.h"
@@ -48,13 +49,14 @@
 
 namespace soax {
 
-Viewer::Viewer(QVTKWidget *qvtk) : qvtk_(qvtk), renderer_(vtkRenderer::New()),
+Viewer::Viewer(QVTKOpenGLWidget *qvtk) : qvtk_(qvtk), renderer_(vtkRenderer::New()),
                                    slot_connector_(vtkEventQtSlotConnect::New()),
                                    picker_(vtkPointPicker::New()),
                                    snapshot_path_("..") {
+  window_ = vtkGenericOpenGLRenderWindow::New();
+  qvtk_->SetRenderWindow(window_);
   renderer_->SetActiveCamera(viewpoint_.camera());
-  qvtk_->GetRenderWindow()->AddRenderer(renderer_);
-  qvtk_->GetRenderWindow()->SetMultiSamples(8);
+  window_->AddRenderer(renderer_);
   qvtk_->GetInteractor()->SetPicker(picker_);
   picker_->SetTolerance(0.01);
 }
@@ -99,7 +101,7 @@ Viewer::~Viewer() {
   picker_->Delete();
   slot_connector_->Delete();
   renderer_->Delete();
-  // delete qvtk_;
+  window_->Delete();
 }
 
 void Viewer::ToggleImagePlane(bool state, vtkImageData *image) {
@@ -459,7 +461,7 @@ void Viewer::ColorByPolarAngle(bool state) {
 
 /********************** Private Methods **********************/
 void Viewer::Render() {
-  qvtk_->GetRenderWindow()->Render();
+  window_->Render();
 }
 
 void Viewer::SetupImagePlane(vtkImageData *image) {
