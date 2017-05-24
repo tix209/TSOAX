@@ -72,7 +72,7 @@ class MainWindow : public QMainWindow {
   void SolveCorrespondence();
   void ShowParametersDialog();
 
-  // void ComputeSphericalOrientation();
+  void ComputeSphericalOrientation();
   // void ComputeRadialOrientation();
   // void ComputePointDensity();
   // void ComputeCurvature();
@@ -188,7 +188,7 @@ class MainWindow : public QMainWindow {
   QAction *show_parameters_;
 
   // Actions in Analysis menu
-  // QAction *compute_spherical_orientation_;
+  QAction *compute_spherical_orientation_;
   // QAction *compute_radial_orientation_;
   // QAction *compute_point_density_;
   // QAction *compute_curvature_;

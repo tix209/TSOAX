@@ -49,9 +49,9 @@
 #include "include/slice_planes.h"
 #include "include/volume_rendering.h"
 
-#ifdef __APPLE__
-#include "include/osx_helper.h"
-#endif
+// #ifdef __APPLE__
+// #include "include/osx_helper.h"
+// #endif
 
 namespace soax {
 
@@ -72,9 +72,9 @@ MainWindow::MainWindow() {
   central_widget_->setLayout(layout);
   setCentralWidget(central_widget_);
 
-#ifdef __APPLE__
-  disableGLHiDPI(qvtk_->winId());
-#endif
+// #ifdef __APPLE__
+//   disableGLHiDPI(qvtk_->winId());
+// #endif
 
   // These have to come after setCentralWidget otherwise runtime error will
   // be emitted.
@@ -85,7 +85,7 @@ MainWindow::MainWindow() {
 
   setWindowIcon(QIcon(":/icon/Letter-T.png"));
   setWindowTitle("Troax");
-  setUnifiedTitleAndToolBarOnMac(true);
+  // setUnifiedTitleAndToolBarOnMac(true);
 
   ResetActions();
 }
@@ -466,6 +466,10 @@ void MainWindow::SolveCorrespondence() {
   multisnake_->SolveCorrespondence(reader_->GetNumberOfImages());
   statusBar()->showMessage("Correspondence solved.");
   show_tracks_->setEnabled(true);
+}
+
+void MainWindow::ComputeSphericalOrientation() {
+  
 }
 
 void MainWindow::ShowParametersDialog() {
@@ -870,7 +874,12 @@ void MainWindow::CreateProcessMenuActions() {
   addAction(solve_correspondence_);
 }
 
-void MainWindow::CreateAnalysisMenuActions() {}
+void MainWindow::CreateAnalysisMenuActions() {
+  compute_spherical_orientation_ = analysis_->addAction(
+      tr("Compute Spherical Orientation"), this,
+      SLOT(ComputeSphericalOrientation()));
+  addAction(compute_spherical_orientation_);
+}
 
 void MainWindow::CreateToolsMenuActions() {
   show_parameters_ = tools_->addAction(
@@ -968,6 +977,7 @@ void MainWindow::ResetActions() {
   initialize_snakes_->setEnabled(false);
   deform_snakes_->setEnabled(false);
   solve_correspondence_->setEnabled(false);
+  compute_spherical_orientation_->setEnabled(false);
   show_parameters_->setEnabled(false);
 }
 

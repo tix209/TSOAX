@@ -37,7 +37,7 @@ if (APPLE)
   set(MACOSX_BUNDLE_COPYRIGHT ${COPYRIGHT})
   set(MACOSX_BUNDLE_GUI_IDENTIFIER ${IDENTIFIER})
   set(MACOSX_BUNDLE_ICON_FILE ${ICON_NAME})
-  add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${SRCS} osx_helper.mm icons.qrc
+  add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${SRCS} icons.qrc
     ${ICON_FILE})
   set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST
     ${CMAKE_SOURCE_DIR}/TroaxBundleInfo.plist.in)

@@ -29,7 +29,7 @@ int main(int argc, char **argv) {
   QApplication app(argc, argv);
 #ifdef __APPLE__
   app.setAttribute(Qt::AA_UseHighDpiPixmaps);
-  app.setAttribute(Qt::AA_DontCreateNativeWidgetSiblings);
+  // app.setAttribute(Qt::AA_DontCreateNativeWidgetSiblings);
 #endif
   soax::MainWindow window;
   const int width = 800;
