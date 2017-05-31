@@ -202,6 +202,7 @@ void MainWindow::LoadSnakes() {
   save_snakes_->setEnabled(true);
   toggle_snakes_->setEnabled(true);
   toggle_snakes_->setChecked(true);
+  compute_spherical_orientation_->setEnabled(true);
   UpdateSnakeView(scroll_bar_->value());
   connect(scroll_bar_, SIGNAL(valueChanged(int)),
           this, SLOT(UpdateSnakeView(int)));
