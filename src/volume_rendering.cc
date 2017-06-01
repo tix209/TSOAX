@@ -133,10 +133,8 @@ void VolumeRendering::SetupBoundingBox() {
 
 void VolumeRendering::SetupSmartVolumeMapper(vtkImageData *image) {
   vtkSmartVolumeMapper *mapper = vtkSmartVolumeMapper::New();
-  // vtkFixedPointVolumeRayCastMapper *mapper = vtkFixedPointVolumeRayCastMapper::New();
   mapper->SetBlendModeToMaximumIntensity();
-  // mapper->SetBlendModeToMinimumIntensity();
-  mapper->SetRequestedRenderModeToDefault();
+  // mapper->SetInterpolationModeToLinear();
   mapper->SetInputData(image);
   volume_->SetMapper(mapper);
   mapper->Delete();
