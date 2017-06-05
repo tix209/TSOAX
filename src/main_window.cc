@@ -32,9 +32,9 @@
 #include <QMessageBox>
 #include <QVBoxLayout>
 #include <QInputDialog>
-#include "QVTKWidget.h"
 #include "QVTKOpenGLWidget.h"
 
+#include "include/util.h"
 #include "include/image_reader.h"
 #include "include/viewer.h"
 #include "include/viewpoint.h"
@@ -48,7 +48,7 @@
 #include "include/image_plane.h"
 #include "include/slice_planes.h"
 #include "include/volume_rendering.h"
-
+#include "include/analysis_options_dialog.h"
 // #ifdef __APPLE__
 // #include "include/osx_helper.h"
 // #endif
@@ -470,7 +470,45 @@ void MainWindow::SolveCorrespondence() {
 }
 
 void MainWindow::ComputeSphericalOrientation() {
-  
+  // TODO: save the orientation on a frame basis
+  QString filename = QFileDialog::getSaveFileName(
+      this, tr("Save spherical orientation"), "..", tr("CSV files (*.csv)"));
+  if (filename.isEmpty()) return;
+
+  PointType center;
+  if (!analysis_options_dialog_->GetImageCenter(&center)) {
+    ShowErrorDialog("Image center is invalid!");
+    return;
+  }
+  std::cout << center << std::endl;
+  double inside_percentage = 1.0;
+  if (!analysis_options_dialog_->GetInsideRatio(&inside_percentage)) {
+    ShowErrorDialog("Inside ratio is invalid!");
+    return;
+  }
+
+  double radius = 0.0;
+  if (!analysis_options_dialog_->GetRadius(&radius)) {
+    ShowErrorDialog("Radius is invalid!");
+    return;
+  }
+
+  double padding = 0.0;
+  if (analysis_options_dialog_->ExcludeBoundaryChecked()) {
+    padding = 2.0;
+  }
+
+  std::ofstream outfile;
+  outfile.open(filename.toStdString().c_str());
+  if (!outfile.is_open()) {
+    ShowErrorDialog("Open file failed!");
+    return;
+  }
+
+  double max_r = inside_percentage * radius;
+  multisnake_->ComputeSphericalOrientation(center, max_r, padding, outfile);
+  outfile.close();
+  statusBar()->showMessage(tr("Spherical orientation file saved."));
 }
 
 void MainWindow::ShowParametersDialog() {
@@ -569,11 +607,17 @@ void MainWindow::SaveSnapshot() {
   viewer_->SaveWindowImage(filename);
 }
 
+void MainWindow::ShowAnalysisOptions() {
+  if (analysis_options_dialog_->exec()) {
+    analysis_options_dialog_->DisableOKButton();
+  }
+}
+
 void MainWindow::AboutTroax() {
   QMessageBox::about(
       this, tr("About Troax"),
       tr("<center><h3>Troax</h3>"
-         "\n<p style=\"font-size:12px; font-weight:normal\">Version 0.1.3</p>\n"
+         "\n<p style=\"font-size:12px; font-weight:normal\">Version 0.1.4</p>\n"
          "<p style=\"font-size:12px;font-weight:normal\">"
          "Troax delineates centerlines of curvilinear networks from 2D/3D images. It also tracks network dynamics from 2D/3D videos. This work is supported by NIH grant R01GM098430.</p>\n"
          "\n<p><a href=\"https://github.com/tix209/troax\">Troax website</a></p>\n"

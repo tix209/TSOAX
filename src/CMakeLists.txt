@@ -18,7 +18,8 @@ qt_wrap_cpp(${PROJECT_NAME} SRCS
   ../include/viewer.h
   ../include/main_window.h
   ../include/parameters_dialog.h
-  ../include/view_options_dialog.h)
+  ../include/view_options_dialog.h
+  ../include/analysis_options_dialog.h)
 
 if (APPLE)
   set(ICON_FOLDER ../icon)

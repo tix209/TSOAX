@@ -37,6 +37,8 @@ class Viewer;
 class Multisnake;
 class ParametersDialog;
 class ViewOptionsDialog;
+class AnalysisOptionsDialog;
+
 
 class MainWindow : public QMainWindow {
   Q_OBJECT
@@ -76,7 +78,7 @@ class MainWindow : public QMainWindow {
   // void ComputeRadialOrientation();
   // void ComputePointDensity();
   // void ComputeCurvature();
-  // void ShowAnalysisOptions();
+  void ShowAnalysisOptions();
 
   void LoadViewpoint();
   void SaveViewpoint();
@@ -123,6 +125,7 @@ class MainWindow : public QMainWindow {
   QWidget *central_widget_;
   ParametersDialog *parameters_dialog_;
   ViewOptionsDialog *view_options_dialog_;
+  AnalysisOptionsDialog *analysis_options_dialog_;
 
   // Menus
   QMenu *file_;
@@ -192,7 +195,7 @@ class MainWindow : public QMainWindow {
   // QAction *compute_radial_orientation_;
   // QAction *compute_point_density_;
   // QAction *compute_curvature_;
-  // QAction *show_analysis_options_;
+  QAction *show_analysis_options_;
 
   // Actions in Help menu
   QAction *about_troax_;

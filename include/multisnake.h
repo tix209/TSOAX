@@ -160,6 +160,9 @@ class Multisnake : public QObject {
 
   Snake *GetFirstSnake(size_t track_index) const;
 
+  void ComputeSphericalOrientation(const PointType &center, double max_r, double padding,
+                                   std::ostream &os) const;
+
  signals:
   void ExtractionProgressed(int value);
 
@@ -249,6 +252,11 @@ class Multisnake : public QObject {
   size_t ComputeSnakeIndex(size_t frame_index, size_t index) const;
 
   void UpdateSnakeCentroid();
+  bool IsInsideSphere(const PointType &center, const PointType &p,
+                      double r) const;
+
+  void ComputeThetaPhi(Vector3d v, double &theta, double &phi) const;
+
 
 
   QString path_ = "..";

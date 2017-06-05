@@ -457,7 +457,63 @@ Snake *Multisnake::GetFirstSnake(size_t track_index) const {
   return converged_snake_track_[track_index].GetFirstSnake();
 }
 
+void Multisnake::ComputeSphericalOrientation(
+    const PointType &center, double max_r, double padding,
+    std::ostream &os) const {
+  os << "Polar,Azimuthal" << std::endl;
+  constexpr unsigned step = 1;
+  for (size_t i = 0; i < converged_snake_sequence_.size(); i++) {
+    for (SnakeConstIterator it = converged_snake_sequence_[i].begin();
+         it != converged_snake_sequence_[i].end(); ++it) {
+      for (size_t i = 0; i < (*it)->GetSize() - step; i += step) {
+        PointType p1 = (*it)->GetVertex(i);
+        PointType p2 = (*it)->GetVertex(i + step);
+        if (this->IsInsideSphere(center, p1, max_r) &&
+            this->IsInsideSphere(center, p2, max_r) &&
+            (*it)->IsInsideImage(p1, padding) &&
+            (*it)->IsInsideImage(p2, padding)) {
+          double theta, phi;
+          this->ComputeThetaPhi(p1 - p2, theta, phi);
+          os << theta << "," << phi << std::endl;
+        }
+      }
+    }
+    os << "," << std::endl;  // separating the frames
+  }
+}
+
+
 /************************ Private Methods ************************/
+bool Multisnake::IsInsideSphere(const PointType &center,
+                                const PointType &p, double r) const {
+  return (center - p).squaredNorm() < r * r;
+}
+
+void Multisnake::ComputeThetaPhi(Vector3d v, double &theta, double &phi) const {
+  // phi is (-pi/2, +pi/2]
+  // theta is [0, pi)
+  const double r = v.GetNorm();
+
+  if (std::abs(v[0]) < kEpsilon && std::abs(v[1]) < kEpsilon) {
+    // x = y = 0
+    phi = 0;
+    theta = 0;
+  } else if (std::abs(v[0]) < kEpsilon) {
+    // x = 0, y != 0
+    if (v[1] < -kEpsilon)
+      v = -v;
+
+    phi = 90;
+    theta = std::acos(v[2]/r) * 180 / kPi;
+  } else {
+    // x != 0
+    if (v[0] < -kEpsilon)
+      v = -v;
+
+    phi = std::atan(v[1] / v[0]) * 180 / kPi;
+    theta = std::acos(v[2]/r) * 180 / kPi;
+  }
+}
 
 void Multisnake::ComputeGradient() {
   gradient_calc_->DeleteGradient();
