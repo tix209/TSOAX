@@ -69,8 +69,17 @@ double GetMaximumIntensity(vtkImageData *image) {
 
 bool IsInside(vtkImageData *image, int *index) {
   int *extent = image->GetExtent();
-  for (int i = 0; i < 3; i++) {
+  for (int i = 0; i < 3; ++i) {
     if (index[i] < extent[2 * i] || index[i] > extent[2 * i + 1])
+      return false;
+  }
+  return true;
+}
+
+bool IsInside(vtkImageData *image, const PointType &p, double padding) {
+  int *extent = image->GetExtent();
+  for (int i = 0; i < 3; ++i) {
+    if (p[i] < extent[2 * i] - padding || p[i] > extent[2 * i + 1] - padding)
       return false;
   }
   return true;

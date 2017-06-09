@@ -99,6 +99,9 @@ class ImageReader {
    */
   QString GetFilePath(size_t index = 0) const;
 
+  /**
+   * Returns the frame name without the suffix.
+   */
   QString GetFileNameWithoutSuffix(size_t index = 0) const;
 
   /**

@@ -22,6 +22,7 @@
 #ifndef IMAGE_H_
 #define IMAGE_H_
 
+#include "include/util.h"
 #include <string>
 
 class vtkImageData;
@@ -39,10 +40,11 @@ double *GetImageGradient(vtkImageData *image, int x, int y, int z);
 double *GetImageGradient(vtkImageData *image, int *index);
 
 /*
- * Returns true if index is within the bounds specified by EXTENT (x_min,
- * x_max, y_min, y_max, z_min, z_max).
+ * Returns true if an index(int) or point(double) is within the bounds specified
+ * by EXTENT (x_min, x_max, y_min, y_max, z_min, z_max) minus the padding.
  */
 bool IsInside(vtkImageData *image, int *index);
+bool IsInside(vtkImageData *image, const PointType &p, double padding);
 
 /*
  * Returns a boolen array (voxel of IMAGE).

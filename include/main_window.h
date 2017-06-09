@@ -74,6 +74,9 @@ class MainWindow : public QMainWindow {
   void SolveCorrespondence();
   void ShowParametersDialog();
 
+  /**
+   * Compute snake local oriention for the image or frames.
+   */
   void ComputeSphericalOrientation();
   // void ComputeRadialOrientation();
   // void ComputePointDensity();
@@ -210,6 +213,8 @@ class MainWindow : public QMainWindow {
   size_t track_examined_ = 0;
   size_t stepsize_ = 0;
   size_t track_number_ = 0;
+
+  QString analysis_dir_ = "..";
 
   MainWindow(const MainWindow &);
   void operator=(const MainWindow &);

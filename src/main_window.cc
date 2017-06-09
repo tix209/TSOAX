@@ -471,25 +471,27 @@ void MainWindow::SolveCorrespondence() {
 
 void MainWindow::ComputeSphericalOrientation() {
   // TODO: save the orientation on a frame basis
-  QString filename = QFileDialog::getSaveFileName(
-      this, tr("Save spherical orientation"), "..", tr("CSV files (*.csv)"));
-  if (filename.isEmpty()) return;
+  QString dir = QFileDialog::getExistingDirectory(
+      this, tr("Open folder for spherical orientation "), analysis_dir_,
+      QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+  if (dir.isEmpty())  return;
+  analysis_dir_ = dir;
 
   PointType center;
   if (!analysis_options_dialog_->GetImageCenter(&center)) {
-    ShowErrorDialog("Image center is invalid!");
+    statusBar()->showMessage("Image center is invalid!");
     return;
   }
   std::cout << center << std::endl;
   double inside_percentage = 1.0;
   if (!analysis_options_dialog_->GetInsideRatio(&inside_percentage)) {
-    ShowErrorDialog("Inside ratio is invalid!");
+    statusBar()->showMessage("Inside ratio is invalid!");
     return;
   }
 
   double radius = 0.0;
   if (!analysis_options_dialog_->GetRadius(&radius)) {
-    ShowErrorDialog("Radius is invalid!");
+    statusBar()->showMessage("Radius is invalid!");
     return;
   }
 
@@ -498,17 +500,23 @@ void MainWindow::ComputeSphericalOrientation() {
     padding = 2.0;
   }
 
-  std::ofstream outfile;
-  outfile.open(filename.toStdString().c_str());
-  if (!outfile.is_open()) {
-    ShowErrorDialog("Open file failed!");
-    return;
-  }
-
   double max_r = inside_percentage * radius;
-  multisnake_->ComputeSphericalOrientation(center, max_r, padding, outfile);
-  outfile.close();
-  statusBar()->showMessage(tr("Spherical orientation file saved."));
+  for (std::size_t i = 0; i < reader_->GetNumberOfImages(); ++i) {
+    QString path = QDir::toNativeSeparators(
+        dir + "/" + reader_->GetFileNameWithoutSuffix(i) + "_spherical_"
+        + QString::number(i) + ".csv");
+    std::ofstream outfile;
+    outfile.open(path.toStdString().c_str());
+    if (!outfile.is_open()) {
+      statusBar()->showMessage("Open file failed!");
+      return;
+    }
+
+    multisnake_->ComputeSphericalOrientation(reader_->GetImage(i),
+                                             center, max_r, padding, i, outfile);
+    outfile.close();
+  }
+  statusBar()->showMessage(tr("Spherical orientation files are saved."));
 }
 
 void MainWindow::ShowParametersDialog() {
