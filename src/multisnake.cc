@@ -462,13 +462,11 @@ void Multisnake::ComputeSphericalOrientation(
     size_t i, std::ostream &os) const {
   os << "Polar,Azimuthal" << std::endl;
   constexpr unsigned step = 1;
-
-  for (const auto &c : converged_snake_sequence_) {
-  // for (SnakeConstIterator it = converged_snake_sequence_[i].begin();
-  //      it != converged_snake_sequence_[i].end(); ++it) {
-    for (size_t i = 0; i < c->GetSize() - step; i += step) {
-      PointType p1 = c->GetVertex(i);
-      PointType p2 = c->GetVertex(i + step);
+  auto c = this->GetConvergedSnakes(i);
+  for (auto it = c.begin(); it != c.end(); ++it) {
+    for (size_t i = 0; i < (*it)->GetSize() - step; i += step) {
+      PointType p1 = (*it)->GetVertex(i);
+      PointType p2 = (*it)->GetVertex(i + step);
       if (this->IsInsideSphere(center, p1, max_r) &&
           this->IsInsideSphere(center, p2, max_r) &&
           IsInside(image, p1, padding) &&
@@ -492,7 +490,7 @@ bool Multisnake::IsInsideSphere(const PointType &center,
 void Multisnake::ComputeThetaPhi(VectorXd v, double &theta, double &phi) const {
   // phi is (-pi/2, +pi/2]
   // theta is [0, pi)
-  const double r = v.GetNorm();
+  double r = v.norm();
 
   if (std::abs(v[0]) < kEpsilon && std::abs(v[1]) < kEpsilon) {
     // x = y = 0

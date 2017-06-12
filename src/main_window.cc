@@ -64,6 +64,7 @@ MainWindow::MainWindow() {
   central_widget_ = new QWidget(this);
   parameters_dialog_ = new ParametersDialog(this);
   view_options_dialog_ = new ViewOptionsDialog(this);
+  analysis_options_dialog_ = new AnalysisOptionsDialog(this);
 
   QVBoxLayout *layout = new QVBoxLayout;
   layout->addWidget(qvtk_);
@@ -203,6 +204,8 @@ void MainWindow::LoadSnakes() {
   toggle_snakes_->setEnabled(true);
   toggle_snakes_->setChecked(true);
   compute_spherical_orientation_->setEnabled(true);
+  show_analysis_options_->setEnabled(true);
+
   UpdateSnakeView(scroll_bar_->value());
   connect(scroll_bar_, SIGNAL(valueChanged(int)),
           this, SLOT(UpdateSnakeView(int)));
@@ -460,6 +463,8 @@ void MainWindow::DeformSnakes() {
   save_snakes_->setEnabled(true);
   solve_correspondence_->setEnabled(false);
   show_tracks_->setEnabled(true);
+  compute_spherical_orientation_->setEnabled(true);
+  show_analysis_options_->setEnabled(true);
 }
 
 void MainWindow::SolveCorrespondence() {
@@ -625,7 +630,7 @@ void MainWindow::AboutTroax() {
   QMessageBox::about(
       this, tr("About Troax"),
       tr("<center><h3>Troax</h3>"
-         "\n<p style=\"font-size:12px; font-weight:normal\">Version 0.1.4</p>\n"
+         "\n<p style=\"font-size:12px; font-weight:normal\">Version 0.1.5</p>\n"
          "<p style=\"font-size:12px;font-weight:normal\">"
          "Troax delineates centerlines of curvilinear networks from 2D/3D images. It also tracks network dynamics from 2D/3D videos. This work is supported by NIH grant R01GM098430.</p>\n"
          "\n<p><a href=\"https://github.com/tix209/troax\">Troax website</a></p>\n"
@@ -932,6 +937,10 @@ void MainWindow::CreateAnalysisMenuActions() {
       tr("Compute Spherical Orientation"), this,
       SLOT(ComputeSphericalOrientation()));
   addAction(compute_spherical_orientation_);
+
+  show_analysis_options_ = analysis_->addAction(tr("Analysis Options"),
+                                                this, SLOT(ShowAnalysisOptions()));
+  addAction(show_analysis_options_);
 }
 
 void MainWindow::CreateToolsMenuActions() {
@@ -1031,6 +1040,7 @@ void MainWindow::ResetActions() {
   deform_snakes_->setEnabled(false);
   solve_correspondence_->setEnabled(false);
   compute_spherical_orientation_->setEnabled(false);
+  show_analysis_options_->setEnabled(false);
   show_parameters_->setEnabled(false);
 }
 
