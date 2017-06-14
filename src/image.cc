@@ -66,6 +66,25 @@ double GetMaximumIntensity(vtkImageData *image) {
   return image->GetScalarRange()[1];
 }
 
+PointType GetImageCenter(vtkImageData *image) {
+  int *extent = image->GetExtent();
+  int dim = image->GetDataDimension();
+  PointType center(dim);
+  for (int i = 0; i < dim; ++i) {
+    center(i) = extent[2*i+1] / 2.0;
+  }
+  return center;
+}
+
+double GetImageDiagonal(vtkImageData * image) {
+  int *size = image->GetDimensions();
+  int dim = image->GetDataDimension();
+  double squared_sum = 0.0;
+  for (int i = 0; i < dim; ++i) {
+    squared_sum += size[i] * size[i];
+  }
+  return std::sqrt(squared_sum);
+}
 
 bool IsInside(vtkImageData *image, int *index) {
   int *extent = image->GetExtent();

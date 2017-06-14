@@ -39,6 +39,10 @@ double GetMaximumIntensity(vtkImageData *image);
 double *GetImageGradient(vtkImageData *image, int x, int y, int z);
 double *GetImageGradient(vtkImageData *image, int *index);
 
+PointType GetImageCenter(vtkImageData * image);
+
+double  GetImageDiagonal(vtkImageData * image);
+
 /*
  * Returns true if an index(int) or point(double) is within the bounds specified
  * by EXTENT (x_min, x_max, y_min, y_max, z_min, z_max) minus the padding.

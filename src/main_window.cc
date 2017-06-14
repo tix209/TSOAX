@@ -125,7 +125,6 @@ void MainWindow::OpenImageFile() {
 
   reader_->ReadFile(filename);
   // reader_->ReverseImageSequence();
-
   ShowImage();
 }
 
@@ -1045,6 +1044,10 @@ void MainWindow::ResetActions() {
 }
 
 void MainWindow::ShowImage() {
+  analysis_options_dialog_->SetImageCenter(GetImageCenter(reader_->GetImage()));
+  double radius = GetImageDiagonal(reader_->GetImage()) / 2.0;
+  analysis_options_dialog_->SetRadius(radius);
+
   scroll_bar_->setMaximum(static_cast<int>(reader_->GetNumberOfImages() - 1));
 
   if (GetImageDimension(reader_->GetImage(scroll_bar_->value())) == 3) {
