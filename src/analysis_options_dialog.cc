@@ -57,17 +57,17 @@ bool AnalysisOptionsDialog::GetCoarseGraining(int *coarse_graining) const {
   return ok;
 }
 
-bool AnalysisOptionsDialog::GetImageCenter(PointType *center) const {
+bool AnalysisOptionsDialog::GetImageCenter(PointType &center) const {
   bool ok = false;
-  for (int i = 0; i < kDimension; i++) {
-    (*center)[i] = center_edit_[i]->text().toDouble(&ok);
+  for (int i = 0; i < center.size(); i++) {
+    center[i] = center_edit_[i]->text().toDouble(&ok);
     if (!ok) return false;
   }
   return true;
 }
 
 void AnalysisOptionsDialog::SetImageCenter(const PointType &center) {
-  for (int i = 0; i < kDimension; i++) {
+  for (int i = 0; i < center.size(); i++) {
     center_edit_[i]->setText(QString::number(center[i]));
   }
 }
@@ -137,7 +137,7 @@ QGroupBox * AnalysisOptionsDialog::CreateCurvatureGroup() {
 
 QGroupBox * AnalysisOptionsDialog::CreateSphericalConfinementGroup() {
   QGroupBox *gb = new QGroupBox(tr("Spherical Confinement"));
-  for (int i = 0; i < kDimension; i++) {
+  for (int i = 0; i < 3; i++) {
     center_edit_[i] = new QLineEdit("0.0");
     connect(center_edit_[i], SIGNAL(textChanged(const QString &)),
             this, SLOT(EnableOKButton()));

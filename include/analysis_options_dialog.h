@@ -41,7 +41,7 @@ class AnalysisOptionsDialog : public QDialog {
   bool GetPixelSize(double *pixel_size) const;
   bool GetCoarseGraining(int *coarse_graining) const;
 
-  bool GetImageCenter(PointType *center) const;
+  bool GetImageCenter(PointType &center) const;
   void SetImageCenter(const PointType &center);
 
   bool GetRadius(double *radius) const;
@@ -56,13 +56,12 @@ class AnalysisOptionsDialog : public QDialog {
   void DisableOKButton();
 
  private:
-  static constexpr unsigned kDimension = 3;
   QGroupBox *CreateGeneralGroup();
   QGroupBox *CreateCurvatureGroup();
   QGroupBox *CreateSphericalConfinementGroup();
 
   QLineEdit *coarse_graining_edit_;
-  QLineEdit *center_edit_[kDimension];
+  QLineEdit *center_edit_[3];
   QLineEdit *radius_edit_;
   QLineEdit *pixel_size_edit_;
   QLineEdit *inside_ratio_edit_;

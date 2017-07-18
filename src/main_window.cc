@@ -481,8 +481,10 @@ void MainWindow::ComputeSphericalOrientation() {
   if (dir.isEmpty())  return;
   analysis_dir_ = dir;
 
-  PointType center;
-  if (!analysis_options_dialog_->GetImageCenter(&center)) {
+  // Assume all the frames have the same dimension
+  int dim = GetImageDimension(reader_->GetImage());
+  PointType center(dim);
+  if (!analysis_options_dialog_->GetImageCenter(center)) {
     statusBar()->showMessage("Image center is invalid!");
     return;
   }
@@ -629,7 +631,7 @@ void MainWindow::AboutTroax() {
   QMessageBox::about(
       this, tr("About Troax"),
       tr("<center><h3>Troax</h3>"
-         "\n<p style=\"font-size:12px; font-weight:normal\">Version 0.1.5</p>\n"
+         "\n<p style=\"font-size:12px; font-weight:normal\">Version 0.1.6</p>\n"
          "<p style=\"font-size:12px;font-weight:normal\">"
          "Troax delineates centerlines of curvilinear networks from 2D/3D images. It also tracks network dynamics from 2D/3D videos. This work is supported by NIH grant R01GM098430.</p>\n"
          "\n<p><a href=\"https://github.com/tix209/troax\">Troax website</a></p>\n"

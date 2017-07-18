@@ -69,10 +69,12 @@ double GetMaximumIntensity(vtkImageData *image) {
 PointType GetImageCenter(vtkImageData *image) {
   int *extent = image->GetExtent();
   int dim = image->GetDataDimension();
+
   PointType center(dim);
   for (int i = 0; i < dim; ++i) {
     center(i) = extent[2*i+1] / 2.0;
   }
+
   return center;
 }
 
