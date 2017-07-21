@@ -23,8 +23,12 @@
 #include <QApplication>
 #include "include/main_window.h"
 #include "QVTKOpenGLWidget.h"
+#include "vtkGenericOpenGLRenderWindow.h"
 
 int main(int argc, char **argv) {
+#ifdef __linux__
+  vtkOpenGLRenderWindow::SetGlobalMaximumNumberOfMultiSamples(0);
+#endif
   QSurfaceFormat::setDefaultFormat(QVTKOpenGLWidget::defaultFormat());
   QApplication app(argc, argv);
 #ifdef __APPLE__
