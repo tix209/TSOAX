@@ -26,15 +26,18 @@
 #include "vtkGenericOpenGLRenderWindow.h"
 
 int main(int argc, char **argv) {
-#ifdef __linux__
+#ifndef __APPLE__
   vtkOpenGLRenderWindow::SetGlobalMaximumNumberOfMultiSamples(0);
 #endif
+
   QSurfaceFormat::setDefaultFormat(QVTKOpenGLWidget::defaultFormat());
   QApplication app(argc, argv);
+
 #ifdef __APPLE__
   app.setAttribute(Qt::AA_UseHighDpiPixmaps);
   // app.setAttribute(Qt::AA_DontCreateNativeWidgetSiblings);
 #endif
+
   soax::MainWindow window;
   const int width = 800;
   const int height = 600;

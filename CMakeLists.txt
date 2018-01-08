@@ -13,9 +13,9 @@ if (CMAKE_BUILD_TYPE MATCHES "Debug")
   endif()
 endif()
 
-# Enable C++11
+# Enable C++14
 if(UNIX OR CMAKE_COMPILER_IS_GNUCXX)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 endif()
 
 option(BUILD_TEST "Build test routines for Troax." OFF)
