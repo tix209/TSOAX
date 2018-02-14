@@ -28,7 +28,7 @@ if (APPLE)
   set_source_files_properties(${ICON_FILE} PROPERTIES
     MACOSX_PACKAGE_LOCATION Resources)
 
-  set(COPYRIGHT "Copyright (c) 2017 Lehigh University. All rights reserved.")
+  set(COPYRIGHT "Copyright (c) 2018 Lehigh University. All rights reserved.")
   set(IDENTIFIER "edu.lehigh.troax")
 
   set(PROJECT_VERSION 0.1.3)
