@@ -16,7 +16,7 @@
  *
  * Author: Ting Xu (xuting.bme@gmail.com)
  *
- * This file implements the main window of the Troax program.
+ * This file implements the main window of the TSOAX program.
  */
 
 
@@ -85,7 +85,7 @@ MainWindow::MainWindow() {
   CreateProgressBar();
 
   setWindowIcon(QIcon(":/icon/Letter-T.png"));
-  setWindowTitle("Troax");
+  setWindowTitle("TSOAX");
   // setUnifiedTitleAndToolBarOnMac(true);
 
   ResetActions();
@@ -114,7 +114,7 @@ void MainWindow::OpenImageFile() {
   if (msg.exec() == QMessageBox::Yes) {
     bool ok;
     int nslices_per_frame = QInputDialog::getInt(
-        this, tr("Troax"), tr("How many z-slices does each frame have?"),
+        this, tr("TSOAX"), tr("How many z-slices does each frame have?"),
         1, 1, 2147483647, 1, &ok);
     if (ok) {
       reader_->set_nslices_per_frame(nslices_per_frame);
@@ -314,7 +314,7 @@ void MainWindow::CloseSession() {
 
   open_image_file_->setEnabled(true);
   open_image_dir_->setEnabled(true);
-  setWindowTitle("Troax");
+  setWindowTitle("TSOAX");
 
   track_examined_ = 0;
   stepsize_ = 0;
@@ -344,7 +344,7 @@ void MainWindow::ShowTracks() {
     QString question = QString("# of tracks to check: (max: ") +
                        QString::number(max_tracks) + ")";
     int num_tracks = QInputDialog::getInt(
-        this, tr("Troax"), question, 2, 2, static_cast<int>(max_tracks), 1, &ok);
+        this, tr("TSOAX"), question, 2, 2, static_cast<int>(max_tracks), 1, &ok);
     stepsize_ = max_tracks / num_tracks;
   }
 
@@ -627,16 +627,16 @@ void MainWindow::ShowAnalysisOptions() {
   }
 }
 
-void MainWindow::AboutTroax() {
+void MainWindow::AboutTSOAX() {
   QMessageBox::about(
-      this, tr("About Troax"),
-      tr("<center><h3>Troax</h3>"
-         "\n<p style=\"font-size:12px; font-weight:normal\">Version 0.1.6</p>\n"
+      this, tr("About TSOAX"),
+      tr("<center><h3>TSOAX</h3>"
+         "\n<p style=\"font-size:12px; font-weight:normal\">Version 0.1.7</p>\n"
          "<p style=\"font-size:12px;font-weight:normal\">"
-         "Troax delineates centerlines of curvilinear networks from 2D/3D images. It also tracks network dynamics from 2D/3D videos. This work is supported by NIH grant R01GM098430.</p>\n"
-         "\n<p><a href=\"https://github.com/tix209/troax\">Troax website</a></p>\n"
+         "TSOAX delineates centerlines of curvilinear networks from 2D/3D images. It also tracks network dynamics from 2D/3D videos. This work is supported by NIH grant R01GM098430.</p>\n"
+         "\n<p><a href=\"https://github.com/tix209/tsoax\">TSOAX on GitHub</a></p>\n"
          "\n<p style=\"font-size:12px; font-weight:normal\">"
-         "&copy; 2017 Lehigh University.</p></center>" ));
+         "&copy; 2018 Lehigh University.</p></center>" ));
 }
 
 void MainWindow::TogglePlanes(bool state) {
@@ -661,7 +661,7 @@ void MainWindow::ToggleBoundingBox(bool state) {
 }
 
 void MainWindow::UpdateWindowTitle(int index) {
-  setWindowTitle(QString("Troax - ") + reader_->GetFilePath(index));
+  setWindowTitle(QString("TSOAX - ") + reader_->GetFilePath(index));
 }
 
 void MainWindow::UpdateFrameNumber(int index) {
@@ -964,16 +964,16 @@ void MainWindow::CreateToolsMenuActions() {
 }
 
 void MainWindow::CreateHelpMenuActions() {
-  about_troax_ = help_->addAction(
-      tr("About Troax"), this, SLOT(AboutTroax()));
-  addAction(about_troax_);
+  about_tsoax_ = help_->addAction(
+      tr("About TSOAX"), this, SLOT(AboutTSOAX()));
+  addAction(about_tsoax_);
 
   about_qt_ = help_->addAction(tr("About Qt"), qApp, SLOT(aboutQt()));
   addAction(about_qt_);
 }
 
 void MainWindow::CreateToolBar() {
-  toolbar_ = addToolBar(tr("Troax Toolbar"));
+  toolbar_ = addToolBar(tr("TSOAX Toolbar"));
   toolbar_->addAction(open_image_file_);
   toolbar_->addAction(load_parameters_);
   toolbar_->addAction(save_snakes_);

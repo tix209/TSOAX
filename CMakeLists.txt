@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(Troax)
+project(TSOAX)
 
 if (CMAKE_BUILD_TYPE MATCHES "Debug")
   if(MSVC) # MSVC compiler (Win32 only)

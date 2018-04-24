@@ -16,7 +16,7 @@
  *
  * Author: Ting Xu (xuting.bme@gmail.com)
  *
- * This class is the main window of the Troax program.
+ * This class is the main window of the TSOAX program.
  */
 
 
@@ -87,7 +87,7 @@ class MainWindow : public QMainWindow {
   void SaveViewpoint();
   void SaveSnapshot();
 
-  void AboutTroax();
+  void AboutTSOAX();
 
   void TogglePlanes(bool state);
   void ToggleVolumeRendering(bool state);
@@ -201,7 +201,7 @@ class MainWindow : public QMainWindow {
   QAction *show_analysis_options_;
 
   // Actions in Help menu
-  QAction *about_troax_;
+  QAction *about_tsoax_;
   QAction *about_qt_;
 
   QToolBar *toolbar_;
