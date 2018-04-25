@@ -1,7 +1,24 @@
 # TSOAX
+TSOAX is an open source software to extract and track the growth and
+deformation of biopolymer networks from 2D and 3D time-lapse sequences. It
+tracks each filament or network branch from complex network dynamics and works
+well even if filaments disappear or reappear.
 
+TSOAX is an extension of [SOAX](http://www.cse.lehigh.edu/~idealab/soax/) (for
+network extraction in static images) to network extraction and tracking in time
+lapse movies.
+
+If you find this repository helpful, please cite:
+```
+@article{XuTSOAX2018,
+    author  = {T. Xu, C. Langouras, M. Adeli Koudehi, B. Vos, N. Wang,
+        G. H. Koenderink, D. Vavylonis, and X. Huang},
+    title   = {Automated Tracking of Biopolymer Growth and Network Deformation with TSOAX},
+    journal = {biorxiv},
+    year    = {2018},
+}
+```
 ## Installation
-
 ### Binaries
 You can download and install binaries from [TSOAX
 website](http://www.cse.lehigh.edu/~idealab/tsoax).

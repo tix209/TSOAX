@@ -630,12 +630,11 @@ void MainWindow::ShowAnalysisOptions() {
 void MainWindow::AboutTSOAX() {
   QMessageBox::about(
       this, tr("About TSOAX"),
-      tr("<center><h3>TSOAX</h3>"
-         "\n<p style=\"font-size:12px; font-weight:normal\">Version 0.1.7</p>\n"
-         "<p style=\"font-size:12px;font-weight:normal\">"
-         "TSOAX delineates centerlines of curvilinear networks from 2D/3D images. It also tracks network dynamics from 2D/3D videos. This work is supported by NIH grant R01GM098430.</p>\n"
-         "\n<p><a href=\"https://github.com/tix209/tsoax\">TSOAX on GitHub</a></p>\n"
-         "\n<p style=\"font-size:12px; font-weight:normal\">"
+      tr("<center>TSOAX v0.1.7</center>"
+         "<p style=\"font-size:11px;font-weight:normal\">"
+         "TSOAX extract and track the growth and deformation of biopolymer networks from 2D and 3D time-lapse sequences. This work is supported by NIH grant R01GM098430.</p>"
+         "<center><p><a href=\"https://github.com/tix209/tsoax\">TSOAX on GitHub</a></p>"
+         "<p style=\"font-size:11px; font-weight:normal\">"
          "&copy; 2018 Lehigh University.</p></center>" ));
 }
 
