@@ -632,7 +632,7 @@ void MainWindow::AboutTSOAX() {
       this, tr("About TSOAX"),
       tr("<center>TSOAX v0.1.7</center>"
          "<p style=\"font-size:11px;font-weight:normal\">"
-         "TSOAX extract and track the growth and deformation of biopolymer networks from 2D and 3D time-lapse sequences. This work is supported by NIH grant R01GM098430.</p>"
+         "TSOAX extract and track the growth and deformation of biopolymer networks from 2D and 3D time-lapse sequences. This work was supported by NIH grants R01GM114201 and R01GM098430.</p>"
          "<center><p><a href=\"https://github.com/tix209/tsoax\">TSOAX on GitHub</a></p>"
          "<p style=\"font-size:11px; font-weight:normal\">"
          "&copy; 2018 Lehigh University.</p></center>" ));
