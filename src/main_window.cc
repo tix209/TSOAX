@@ -443,9 +443,9 @@ void MainWindow::DeformSnakes() {
                 + QString::number(time_elasped) + "s.";
   statusBar()->showMessage(msg);
 
-  statusBar()->showMessage("Solving correspondence...");
-  multisnake_->SolveCorrespondence(reader_->GetNumberOfImages());
-  statusBar()->showMessage("Correspondence solved.");
+  // statusBar()->showMessage("Solving correspondence...");
+  // multisnake_->SolveCorrespondence(reader_->GetNumberOfImages());
+  // statusBar()->showMessage("Correspondence solved.");
 
   toggle_snakes_->setEnabled(true);
   toggle_snakes_->setChecked(true);
@@ -460,8 +460,8 @@ void MainWindow::DeformSnakes() {
           this, SLOT(UpdateJunctionView(int)));
 
   save_snakes_->setEnabled(true);
-  solve_correspondence_->setEnabled(false);
-  show_tracks_->setEnabled(true);
+  solve_correspondence_->setEnabled(true);
+  show_tracks_->setEnabled(false);
   compute_spherical_orientation_->setEnabled(true);
   show_analysis_options_->setEnabled(true);
 }
@@ -630,7 +630,7 @@ void MainWindow::ShowAnalysisOptions() {
 void MainWindow::AboutTSOAX() {
   QMessageBox::about(
       this, tr("About TSOAX"),
-      tr("<center>TSOAX v0.1.7</center>"
+      tr("<center>TSOAX v0.1.8</center>"
          "<p style=\"font-size:11px;font-weight:normal\">"
          "TSOAX extract and track the growth and deformation of biopolymer networks from 2D and 3D time-lapse sequences. This work was supported by NIH grants R01GM114201 and R01GM098430.</p>"
          "<center><p><a href=\"https://github.com/tix209/tsoax\">TSOAX on GitHub</a></p>"
@@ -923,11 +923,11 @@ void MainWindow::CreateProcessMenuActions() {
   addAction(initialize_snakes_);
 
   deform_snakes_ = process_->addAction(
-      QIcon(":/icon/Play.png"), tr("Deform and Track Snakes"), this,
+      QIcon(":/icon/Play.png"), tr("Deform Snakes"), this,
       SLOT(DeformSnakes()), QKeySequence((Qt::CTRL + Qt::Key_D)));
   addAction(deform_snakes_);
 
-  solve_correspondence_ = process_->addAction(tr("Solve Correspondence"), this,
+  solve_correspondence_ = process_->addAction(tr("Track Snakes"), this,
                                               SLOT(SolveCorrespondence()));
   addAction(solve_correspondence_);
 }
