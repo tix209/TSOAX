@@ -18,6 +18,8 @@ If you find this repository helpful, please cite:
     year    = {2019},
 }
 ```
+You can access the full paper [here](https://rdcu.be/bl3ch).
+
 ## Installation
 ### Binaries
 You can download and install binaries from [TSOAX
