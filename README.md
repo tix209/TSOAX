@@ -48,7 +48,7 @@ website](http://athena.physics.lehigh.edu/tsoax/).
    ``` bash
    $ mkdir your-vtk-build-dir
    $ cd your-vtk-build-dir
-   $ cmake -DCMAKE_BUILD_TYPE=Release -DVTK_GROUP_ENABLE_QT=YES /path/to/your-VTK-src-dir/
+   $ cmake -DCMAKE_BUILD_TYPE=Release -DVTK_GROUP_ENABLE_Qt=YES /path/to/your-VTK-src-dir/
    $ make -j 4
    ```
    Add environment variable `VTK_DIR` in your `.bash_profile`:
