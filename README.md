@@ -43,12 +43,12 @@ website](http://athena.physics.lehigh.edu/tsoax/).
    ``` bash
    $ . ~/.bash_profile
    ```
-2. Install VTK. Download [VTK 8.1.0](https://www.vtk.org/download/#latest) and
+2. Install VTK. Download [VTK](https://www.vtk.org/download/#latest) and
    do an out-of-source build
    ``` bash
    $ mkdir your-vtk-build-dir
    $ cd your-vtk-build-dir
-   $ cmake -DCMAKE_BUILD_TYPE=Release -DVTK_Group_Qt=ON /path/to/VTK-8.1.0/
+   $ cmake -DCMAKE_BUILD_TYPE=Release -DVTK_GROUP_ENABLE_QT=YES /path/to/your-VTK-src-dir/
    $ make -j 4
    ```
    Add environment variable `VTK_DIR` in your `.bash_profile`:
