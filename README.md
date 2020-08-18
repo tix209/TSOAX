@@ -31,8 +31,8 @@ website](http://athena.physics.lehigh.edu/tsoax/).
 1. Install [Eigen 3](http://eigen.tuxfamily.org) and [Qt 5](https://www.qt.io)
    using your package manager ([Homebrew](https://brew.sh) or dnf, apt):
    ``` bash
-   $ brew install eigen qt  # for macOS
-   $ sudo dnf install eigen3-devel qt5-devel libXt-devel  # for Fedora
+   $ brew install eigen qt cmake # for macOS
+   $ sudo dnf install eigen3-devel qt5-devel libXt-devel cmake # for Fedora
    ```
    (**macOS only**) Add environment variables in your `.bash_profile`:
    ``` bash
@@ -69,12 +69,12 @@ website](http://athena.physics.lehigh.edu/tsoax/).
 1. Download and install [Microsoft Visual
    Studio](https://www.visualstudio.com/downloads/) 2015 or newer,
    [CMake](https://cmake.org), and [Qt 5](https://www.qt.io).
-2. Configure [VTK 8.1.0](https://www.vtk.org/download/#latest) with CMake (`cmake-gui`).
+2. Configure [VTK](https://www.vtk.org/download/#latest) with CMake (`cmake-gui`).
    - Enter the folder path of where you extracted VTK source code
    - Enter another folder path for `vtk_binary_dir`
    - Click `Configure`
    - Specify generator e.g., Visual Studio 14 2015 Win64
-   - After the configuration is done, check `VTK_Group_Qt` and `VTK_USE_CXX11_FEATURES`
+   - After the configuration is done, check `VTK_Group_ENABLE_Qt` and `VTK_USE_CXX11_FEATURES`
    - Click `Configure`, and change `VTK_QT_VERSION` to 5 and
      `QT_QMAKE_EXECUTABLE` to `C:/Qt/5.10/msvc2015_64/bin`
    - Click `Configure`. Change `Qt5_DIR` to `C:/Qt/5.8/msvc2015_64/lib/cmake/Qt5`
