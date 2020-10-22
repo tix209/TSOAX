@@ -4,7 +4,7 @@ deformation of biopolymer networks from 2D and 3D time-lapse sequences. It
 tracks each filament or network branch from complex network dynamics and works
 well even if filaments disappear or reappear.
 
-TSOAX is an extension of [SOAX](http://athena.physics.lehigh.edu/soax/) (for
+TSOAX is an extension of [SOAX](https://www.lehigh.edu/~div206/soax/) (for
 network extraction in static images) to network extraction and tracking in time
 lapse movies.
 
@@ -23,7 +23,7 @@ You can access the full paper [here](https://rdcu.be/bl3ch).
 ## Installation
 ### Binaries
 You can download and install binaries from [TSOAX
-website](http://athena.physics.lehigh.edu/tsoax/).
+website](https://www.lehigh.edu/~div206/tsoax/).
 
 ### From source
 
