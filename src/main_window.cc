@@ -432,10 +432,12 @@ void MainWindow::DeformSnakes() {
     std::cout << "Extracting frame " << i << "..." << std::endl;
     progress_bar_->setMaximum(static_cast<int>(multisnake_->GetNumberOfInitialSnakes()));
     multisnake_->Evolve();
-    if (multisnake_->snake_parameters()->grouping())
+    if (multisnake_->snake_parameters()->grouping()) {
       multisnake_->Reconfigure(i);
-    else
+    }
+    else {
       multisnake_->ReconfigureWithoutGrouping(i);
+    }
   }
   time(&end);
   double time_elasped = difftime(end, start);
@@ -467,9 +469,20 @@ void MainWindow::DeformSnakes() {
 }
 
 void MainWindow::SolveCorrespondence() {
+  time_t start, end;
+  time(&start);
+  
   statusBar()->showMessage("Solving correspondence...");
   multisnake_->SolveCorrespondence(reader_->GetNumberOfImages());
   statusBar()->showMessage("Correspondence solved.");
+  
+  
+  time(&end);
+  double time_elasped = difftime(end, start);
+  QString msg = QString("Correspondence completed in ")
+                + QString::number(time_elasped) + "s.";
+  statusBar()->showMessage(msg);
+  
   show_tracks_->setEnabled(true);
 }
 

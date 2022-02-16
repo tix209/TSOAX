@@ -26,6 +26,7 @@
 #include <vector>
 #include <iostream>
 #include <eigen3/Eigen/Dense>  // NOLINT(build/include_order)
+#include <deque>
 
 
 namespace soax {
@@ -42,6 +43,8 @@ typedef VectorXd PointType;
 typedef std::vector<PointType> PointContainer;
 typedef MatrixXd::RowXpr RowVec;
 typedef MatrixXd::ConstRowXpr ConstRowVec;
+
+typedef std::deque<std::pair<int, int>> IndexPairContainer;
 
 // Constants
 const double kPi = 3.14159265358979323846264338;

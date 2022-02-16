@@ -80,7 +80,7 @@ ConstRowVec Snake::GetTip(bool is_head) const {
     return GetVertex(vertices_.rows() - 1);
 }
 
-bool Snake::Evolve(const SnakeContainer &snakes) {
+bool Snake::Evolve(const SnakeContainer &snakes,  const Grid &converged_snakes_grid) {
   while (iterations_ < parameters_->maximum_iterations()) {
     if (!Resample())
       return false;
@@ -92,14 +92,17 @@ bool Snake::Evolve(const SnakeContainer &snakes) {
     if (SelfIntersect())
       return false;
 
-    if (!CheckHeadOverlap(snakes))
+    if (!CheckHeadOverlap(snakes, converged_snakes_grid))
       return false;
-    if (!CheckTailOverlap(snakes))
+  
+    if (!CheckTailOverlap(snakes, converged_snakes_grid))
       return false;
 
     IterateOnce();
   }
-  return CheckBodyOverlap(snakes);
+  
+  //std::cout << "Iterations: " << iterations_ << std::endl;
+  return CheckBodyOverlap(snakes, converged_snakes_grid);
 }
 
 bool Snake::EvolveWithTipFixed(int max_iter) {
@@ -119,7 +122,7 @@ bool Snake::EvolveWithTipFixed(int max_iter) {
   return true;
 }
 
-bool Snake::EvolveFinal(const SnakeContainer &snakes, double length) {
+bool Snake::EvolveFinal(const SnakeContainer &snakes, double length, const Grid  &converged_snakes_grid) {
   fixed_head_.resize(0);
   fixed_tail_.resize(0);
   if (iterations_ == 0)
@@ -130,9 +133,9 @@ bool Snake::EvolveFinal(const SnakeContainer &snakes, double length) {
         return true;
     }
 
-    if (!CheckHeadOverlap(snakes))
+    if (!CheckHeadOverlap(snakes, converged_snakes_grid))
       return false;
-    if (!CheckTailOverlap(snakes))
+    if (!CheckTailOverlap(snakes, converged_snakes_grid))
       return false;
     IterateOnce();
     if (!Resample(length))
@@ -295,7 +298,7 @@ void Snake::InitializeFromPart(int start, int end, bool is_open,
   }
 }
 
-bool Snake::CheckHeadOverlap(const SnakeContainer &snakes) {
+bool Snake::CheckHeadOverlap(const SnakeContainer &snakes,  const Grid  &converged_snakes_grid) {
   if (snakes.empty())
     return true;
 
@@ -306,13 +309,13 @@ bool Snake::CheckHeadOverlap(const SnakeContainer &snakes) {
     start += static_cast<int>(parameters_->overlap_threshold() / spacing_);
   }
 
-  first_detach = FindFirstDetachFromHead(start, snakes);
+  first_detach = FindFirstDetachFromHead(start, snakes, converged_snakes_grid);
   if (first_detach != start) {
     if (first_detach == vertices_.rows()) {
       return false;
     } else {
       FindHookedSnake(first_detach - 1, snakes,
-                      &head_hooked_snake_, &head_hooked_index_);
+                      &head_hooked_snake_, &head_hooked_index_, converged_snakes_grid);
       fixed_head_ = head_hooked_snake_->vertices_.row(head_hooked_index_);
       vertices_.row(0) = fixed_head_;
       int n_rows = vertices_.rows() - first_detach + 1;
@@ -328,7 +331,7 @@ bool Snake::CheckHeadOverlap(const SnakeContainer &snakes) {
   return true;
 }
 
-bool Snake::CheckTailOverlap(const SnakeContainer &snakes) {
+bool Snake::CheckTailOverlap(const SnakeContainer &snakes,  const Grid  &converged_snakes_grid) {
   if (snakes.empty())
     return true;
 
@@ -339,13 +342,13 @@ bool Snake::CheckTailOverlap(const SnakeContainer &snakes) {
     start -= static_cast<int>(parameters_->overlap_threshold() / spacing_);
   }
 
-  first_detach = FindFirstDetachFromTail(start, snakes);
+  first_detach = FindFirstDetachFromTail(start, snakes, converged_snakes_grid);
   if (first_detach != start) {
     if (first_detach < 0) {
       return false;
     } else {
       FindHookedSnake(first_detach + 1, snakes,
-                      &tail_hooked_snake_, &tail_hooked_index_);
+                      &tail_hooked_snake_, &tail_hooked_index_, converged_snakes_grid);
       fixed_tail_ = tail_hooked_snake_->vertices_.row(tail_hooked_index_);
       vertices_.row(first_detach + 1) = fixed_tail_;
       vertices_.conservativeResize(first_detach + 2, Eigen::NoChange);
@@ -357,29 +360,86 @@ bool Snake::CheckTailOverlap(const SnakeContainer &snakes) {
   return true;
 }
 
-int Snake::FindFirstDetachFromHead(int start, const SnakeContainer &snakes) {
+int Snake::FindFirstDetachFromHead(int start, const SnakeContainer &snakes, const Grid &converged_snakes_grid) {
   int i = start;
-  while (i < vertices_.rows() && VertexOverlap(i, snakes)) {
+  while (i < vertices_.rows() && VertexOverlap(i, snakes, converged_snakes_grid)) {
     i++;
   }
   return i;
 }
 
-int Snake::FindFirstDetachFromTail(int start, const SnakeContainer &snakes) {
+int Snake::FindFirstDetachFromTail(int start, const SnakeContainer &snakes, const Grid &converged_snakes_grid) {
   int i = start;
-  while (i >= 0 && VertexOverlap(i, snakes)) {
+  while (i >= 0 && VertexOverlap(i, snakes, converged_snakes_grid)) {
     i--;
   }
   return i;
 }
 
-bool Snake::VertexOverlap(int index, const SnakeContainer &snakes) {
-  for (SnakeContainer::const_iterator it = snakes.begin();
+// measures whether there is an overlap betwen point at snakes[index] and any existing point on any snake
+bool Snake::VertexOverlap(int index, const SnakeContainer &snakes, const Grid  &converged_snakes_grid) {
+  /*for (SnakeContainer::const_iterator it = snakes.begin();
        it != snakes.end(); ++it) {
     if ((*it)->PassThrough(vertices_.row(index),
                            parameters_->overlap_threshold()))
       return true;
   }
+  return false;*/
+  
+  /*int org_x_grid = (int)(vertices_.row(index)[0] / parameters_->overlap_threshold());
+  int org_y_grid = (int)(vertices_.row(index)[1] / parameters_->overlap_threshold());
+
+  // bounds check for whether point p is in grid, puts particles outside grid into most extreme existing grid (should be okay, just means that more particles are being compared)
+  if(org_x_grid < 0)
+  {
+      org_x_grid = 0;
+  }
+  else if(org_x_grid >= converged_snakes_grid.size())
+  {
+      org_x_grid = converged_snakes_grid.size() - 1;
+  }
+
+  if(org_y_grid < 0)
+  {
+      org_y_grid = 0;
+  }
+  else if(org_y_grid >= converged_snakes_grid[0].size())
+  {
+      org_y_grid = converged_snakes_grid[0].size() - 1;
+  }
+
+  IndexPairContainer indexes_of_points_in_grid = converged_snakes_grid[org_x_grid][org_y_grid];
+
+  bool test = false;
+  for(unsigned i = 0; i < indexes_of_points_in_grid.size(); ++i)
+  {
+      if(test == false)
+      {
+          ConstRowVec point_in_grid = snakes[std::get<0>(indexes_of_points_in_grid[i])]->GetVertex(std::get<1>(indexes_of_points_in_grid[i]));
+          double dist = (vertices_.row(index) - point_in_grid).norm();
+          if (dist < parameters_->overlap_threshold())
+          {
+            test = true;
+          }
+      }
+  }*/
+  
+  //std::vector<std::pair<int, int> > tmp_neighbors = converged_snakes_grid.getNeighboringTags(Coordinate {vertices_.row(index)[0], vertices_.row(index)[1], vertices_.row(index)[2]}, 1);
+  std::vector<std::pair<int, int> > tmp_neighbors = converged_snakes_grid.getNeighboringTags(Coordinate {vertices_.row(index)[0], vertices_.row(index)[1], 0.0});
+  //std::cout << tmp_neighbors.size() << " !!! ";
+  for(unsigned i = 0; i < tmp_neighbors.size(); ++i)
+  {
+      ConstRowVec point_in_grid = snakes[std::get<0>(tmp_neighbors[i])]->GetVertex(std::get<1>(tmp_neighbors[i]));
+      double d = (vertices_.row(index) - point_in_grid).norm();
+      
+      // d can be zero???
+      
+      if (d < parameters_->overlap_threshold())
+      {
+        return true;
+      }
+  }
+
   return false;
 }
 
@@ -403,7 +463,8 @@ bool Snake::PassThrough(const VectorXd &point, double threshold) const {
 }
 
 
-void Snake::FindHookedSnake(int last_touch,
+// finds closest converged snake to vertex at last_touch
+/*void Snake::FindHookedSnake(int last_touch,
                             const SnakeContainer &snakes,
                             Snake **s, int *index) {
   double min_d = kPlusInfinity;
@@ -417,8 +478,39 @@ void Snake::FindHookedSnake(int last_touch,
       *s = *it;
     }
   }
+}*/
+
+// finds closest converged snake to vertex at last_touch
+void Snake::FindHookedSnake(int last_touch,
+                            const SnakeContainer &snakes,
+                            Snake **s, int *index, const Grid &converged_snakes_grid) {
+  double min_d = kPlusInfinity;
+  
+  std::vector<std::pair<int, int> > tmp_neighbors;
+  int tmp_grid_level = 1;
+  while(tmp_neighbors.size() == 0 && tmp_grid_level < converged_snakes_grid.largestGridDimension())
+  {
+      // this may not be correct...
+      tmp_neighbors = converged_snakes_grid.getNeighboringTags(Coordinate {vertices_.row(last_touch)[0], vertices_.row(last_touch)[1], 0.0}, tmp_grid_level);
+      tmp_grid_level++;
+  }
+  
+  for(unsigned i = 0; i < tmp_neighbors.size(); ++i)
+  {
+      ConstRowVec point_in_grid = snakes[std::get<0>(tmp_neighbors[i])]->GetVertex(std::get<1>(tmp_neighbors[i]));
+      double d = (vertices_.row(last_touch) - point_in_grid).norm();
+
+      if (d < min_d)
+      {
+        min_d = d;
+        *index = tmp_neighbors[i].second;
+        *s = snakes[tmp_neighbors[i].first];
+      }
+  }
+  
 }
 
+// find closest index and distance between a vertex on this snake and point
 double Snake::FindClosestIndexTo(const RowVec &point, int *index) const {
   double min_d = (point - vertices_.row(0)).norm();
   *index = 0;
@@ -431,9 +523,71 @@ double Snake::FindClosestIndexTo(const RowVec &point, int *index) const {
     }
   }
   return min_d;
+  
+  
+  /*std::vector<std::pair<int, int> > tmp_neighbors;
+  int tmp_grid_level = 1;
+  while(tmp_neighbors.size() == 0 && tmp_grid_level < converged_snakes_grid.largestGridDimension())
+  {
+      tmp_neighbors = converged_snakes_grid.getNeighboringTags(Coordinate {vertices_.row(index)[0], vertices_.row(index)[1], 0.0}, tmp_grid_level);
+      tmp_grid_level++;
+  }
+  
+  for(unsigned i = 0; i < tmp_neighbors.size(); ++i)
+  {
+      ConstRowVec point_in_grid = snakes[std::get<0>(tmp_neighbors[i])]->GetVertex(std::get<1>(tmp_neighbors[i]));
+      double dist = (vertices_.row(index) - point_in_grid).norm();
+
+      if (dist < min_d)
+      {
+        min_d = d;
+        *index = i;
+      }
+  }*/
+  
+  
+  
+  /*int org_x_grid = (int)(point[0] / parameters_->overlap_threshold());
+  int org_y_grid = (int)(point[1] / parameters_->overlap_threshold());
+
+  // bounds check for whether point p is in grid, puts particles outside grid into most extreme existing grid (should be okay, just means that more particles are being compared)
+  if(org_x_grid < 0)
+  {
+      org_x_grid = 0;
+  }
+  else if(org_x_grid >= converged_snakes_grid.size())
+  {
+      org_x_grid = converged_snakes_grid.size() - 1;
+  }
+
+  if(org_y_grid < 0)
+  {
+      org_y_grid = 0;
+  }
+  else if(org_y_grid >= converged_snakes_grid[0].size())
+  {
+      org_y_grid = converged_snakes_grid[0].size() - 1;
+  }
+
+  IndexPairContainer indexes_of_points_in_grid = converged_snakes_grid[org_x_grid][org_y_grid];
+
+  bool test = false;
+  for(unsigned i = 0; i < indexes_of_points_in_grid.size(); ++i)
+  {
+      if(test == false)
+      {
+          ConstRowVec point_in_grid = snakes[std::get<0>(indexes_of_points_in_grid[i])]->GetVertex(std::get<1>(indexes_of_points_in_grid[i]));
+          double dist = (vertices_.row(index) - point_in_grid).norm();
+          if (dist < parameters_->overlap_threshold())
+          {
+            test = true;
+          }
+      }
+  }
+  */
 }
 
-bool Snake::CheckBodyOverlap(const SnakeContainer &snakes) {
+bool Snake::CheckBodyOverlap(const SnakeContainer &snakes, const Grid &converged_snakes_grid) {
   if (snakes.empty())
     return true;
 
@@ -442,7 +596,7 @@ bool Snake::CheckBodyOverlap(const SnakeContainer &snakes) {
   int overlap_end = vertices_.rows();
 
   for (int i = 0; i < vertices_.rows(); i++) {
-    bool overlap = VertexOverlap(i, snakes);
+    bool overlap = VertexOverlap(i, snakes, converged_snakes_grid);
     if (overlap && !last_is_overlap) {
       overlap_start = i;
     } else if (!overlap && last_is_overlap && i > overlap_start) {
@@ -827,8 +981,11 @@ double Snake::GetLength() const {
   // return spacing_ * (vertices_.rows() - 1);
 }
 
+// finds minimum distance betwen vertices composing this snake and vertex p
+//double Snake::DistanceTo(ConstRowVec p, Grid &converged_snakes_grid) const {
 double Snake::DistanceTo(ConstRowVec p) const {
   assert(vertices_.rows() > 0);
+      
   double min_d = (p - vertices_.row(0)).norm();
   for (int i = 1; i < vertices_.rows(); i++) {
     double d = (p - vertices_.row(i)).norm();
@@ -938,7 +1095,9 @@ bool IsLonger(const Snake *s1, const Snake *s2) {
 /**
  * Assume the centroid of snake has been updated.
  */
-double ComputeCurveDistance(const Snake *s1, const Snake *s2) {
+ // computes average distances based on average minimum distances between each point on snake s1 and s2
+/*double ComputeCurveDistance(const Snake *s1, const Snake *s2) {
+  // why have a vector here at all???
   std::vector<double> distances;
   distances.reserve(s1->GetSize() + s2->GetSize());
 
@@ -954,7 +1113,49 @@ double ComputeCurveDistance(const Snake *s1, const Snake *s2) {
     //     s2->GetVertex(i) - s2->centroid()));
   }
   return Mean(distances);
+}*/
+
+/**
+ * Assume the centroid of snake has been updated.
+ */
+ // computes average distances based on average minimum distances between each point on snake s1 and s2
+//double ComputeCurveDistance(const Snake *s1, int s1Index, Grid &s1Grid, const Snake *s2, int s2Index, Grid &s2Grid) {
+double ComputeCurveDistance(const Snake *s1, const Snake *s2) {
+  int s1Size = s1->GetSize();
+  int s2Size = s2->GetSize();
+  
+  std::vector<double> distances (s1Size + s2Size, kPlusInfinity);
+  distances.reserve(s1Size + s2Size);
+  
+  for (size_t i = 0; i < s1Size; i++) {
+    ConstRowVec s1_vertex = s1->GetVertex(static_cast<int>(i));
+    
+    //std::tuple<int,int,int> tmpGridPosI = s1Grid.getGridPosFromId(s1Index, i);
+    
+    for (size_t j = 0; j < s2Size; j++) {
+      ConstRowVec s2_vertex = s2->GetVertex(static_cast<int>(j));
+      
+      //std::tuple<int,int,int> tmpGridPosJ = s2Grid.getGridPosFromId(s2Index, j);
+      
+      //assumes both grids are the same size
+      //double tmp_min_grid_dist = s1Grid.getMinDistBetweenBins(tmpGridPosI, tmpGridPosJ);
+      
+      //if(tmp_min_grid_dist < distances[i] || tmp_min_grid_dist < distances[s1Size + j]) {
+      double d = (s1_vertex - s2_vertex).norm();
+      
+      if(d < distances[i]) {
+        distances[i] = d;
+      }
+      
+      if(d < distances[s1Size + j]) {
+        distances[s1Size + j] = d;
+      }
+    }
+  }
+  
+  return Mean(distances);
 }
+
 
 double ComputeOneWayCurveDistance(const Snake *snake, const Snake *target) {
   std::vector<double> distances;

@@ -29,6 +29,7 @@
 #include "eigen3/Eigen/SparseCore"
 #include "eigen3/Eigen/SparseCholesky"
 #include "./util.h"
+#include "./grid.h"
 
 
 namespace soax {
@@ -104,9 +105,9 @@ class Snake {
    * Returns true if the snake survive after evolution with overlap
    * checking with SNAKES.
    */
-  bool Evolve(const SnakeContainer &snakes);
+  bool Evolve(const SnakeContainer &snakes, const Grid &converged_snakes_grid_two);
   bool EvolveWithTipFixed(int max_iter);
-  bool EvolveFinal(const SnakeContainer &snakes, double length);
+  bool EvolveFinal(const SnakeContainer &snakes, double length, const Grid &converged_snakes_grid_two);
 
   const SnakeContainer &subsnakes() const {return subsnakes_;}
 
@@ -172,24 +173,24 @@ class Snake {
    * assumes there is no self-intersection beforehand.
    */
   bool SelfIntersect();
-  bool CheckHeadOverlap(const SnakeContainer &snakes);
-  bool CheckTailOverlap(const SnakeContainer &snakes);
+  bool CheckHeadOverlap(const SnakeContainer &snakes, const Grid &converged_snakes_grid_two);
+  bool CheckTailOverlap(const SnakeContainer &snakes, const Grid &converged_snakes_grid_two);
   bool TipsStopAtSameLocation() const;
   void InitializeFromPart(int start, int end, bool is_open,
                           SnakeContainer *snakes);
 
 
-  int FindFirstDetachFromHead(int start, const SnakeContainer &snakes);
-  int FindFirstDetachFromTail(int start, const SnakeContainer &snakes);
-  bool VertexOverlap(int index, const SnakeContainer &snakes);
+  int FindFirstDetachFromHead(int start, const SnakeContainer &snakes, const Grid &converged_snakes_grid_two);
+  int FindFirstDetachFromTail(int start, const SnakeContainer &snakes, const Grid &converged_snakes_grid_two);
+  bool VertexOverlap(int index, const SnakeContainer &snakes, const Grid &converged_snakes_grid_two);
 
   void FindHookedSnake(int last_touch, const SnakeContainer &snakes,
-                       Snake **s, int *index);
+                       Snake **s, int *index, const Grid  &converged_snakes_grid);
   double FindClosestIndexTo(const RowVec &point, int *index) const;
   /**
    * Returns true if the snake has no body overlap.
    */
-  bool CheckBodyOverlap(const SnakeContainer &snakes);
+  bool CheckBodyOverlap(const SnakeContainer &snakes, const Grid &converged_snakes_grid_two);
 
   void IterateOnce();
   void AddExternalForce(MatrixXd *rhs);
@@ -322,6 +323,7 @@ bool IsLonger(const Snake *s1, const Snake *s2);
 bool IsShorter(const Snake *s1, const Snake *s2);
 
 double ComputeCurveDistance(const Snake *s1, const Snake *s2);
+//double ComputeCurveDistance(const Snake *s1, int s1Index, Grid &s1Grid, const Snake *s2, int s2Index, Grid &s2Grid);
 double ComputeOneWayCurveDistance(const Snake *snake, const Snake *target);
 
 Snake * GetClosestSnake(const Snake *s, const SnakeContainer &snakes,

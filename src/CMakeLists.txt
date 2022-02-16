@@ -29,7 +29,7 @@ if (APPLE)
     MACOSX_PACKAGE_LOCATION Resources)
 
   set(COPYRIGHT "Copyright (c) 2018 Lehigh University. All rights reserved.")
-  set(IDENTIFIER "edu.lehigh.troax")
+  set(IDENTIFIER "edu.lehigh.tsoax")
 
   set(PROJECT_VERSION 0.1.3)
   set(MACOSX_BUNDLE_BUNDLE_NAME ${PROJECT_NAME})

@@ -27,10 +27,13 @@
 #include <vector>
 #include <deque>
 #include <QString>
+#include <omp.h>
 #include "include/util.h"
 #include "include/junctions.h"
 #include "include/munkres.h"
 #include "include/snake_track.h"
+#include "include/grid.h"
+#include "include/lapjv.h"
 
 class vtkImageData;
 class QProgressBar;
@@ -163,6 +166,10 @@ class Multisnake : public QObject {
   void ComputeSphericalOrientation(vtkImageData *image, const PointType &center,
                                    double max_r, double padding,
                                    size_t i, std::ostream &os) const;
+                                   
+  const Grid &converged_snakes_grid() const {
+    return converged_snakes_grid_two_;
+  }
 
  signals:
   void ExtractionProgressed(int value);
@@ -245,8 +252,9 @@ class Multisnake : public QObject {
    * snake i and snake j. Returns the maximum allowable distance (less than
    * threshold);
    */
-  void ComputeCurveDistanceMatrix(Matrix<double> *distance, double threshold);
-
+  //void ComputeCurveDistanceMatrix(Matrix<double> *distance, double threshold);
+  void ComputeCurveDistanceMatrix(double** distance_matrix, double threshold);
+  
   /**
    * Returns the index of snakes as a whole.
    */
@@ -267,16 +275,29 @@ class Multisnake : public QObject {
   Interpolator *image_interp_;
   Interpolator *gradient_interp_;
   SnakeParameters *snake_parameters_;
+  // grid with pair comprised of (converged_snakes index, index of vertex of converged_snakes)
+  //std::vector<std::vector<IndexPairContainer> > converged_snakes_grid_;
+  
+  Grid converged_snakes_grid_two_;
 
   SnakeContainer initial_snakes_;
 
+  // vector of SnakeContiners where the index is the frame count
   std::vector<SnakeContainer> converged_snake_sequence_;
   std::vector<SnakeContainer> comparing_snake_sequence_;
   std::vector<SnakeTrack> converged_snake_track_;
+  
+  std::vector<Grid> converged_snake_grid_sequence_;
 
   std::vector<PointContainer> junction_sequence_;
   std::vector<PointContainer> comparing_junction_sequence_;
 
+  // add converged snake to grid
+  //void AddConvergedSnakeIndexesToGrid(int org_x_grid, int org_y_grid, int converged_snake_index, int vertex_index);
+  
+  // clear converged snakes
+  //void ClearConvergedSnakesGrid();
+  
   Multisnake(const Multisnake &);
   void operator=(const Multisnake &);
 };

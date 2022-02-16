@@ -193,6 +193,24 @@ void Multisnake::Initialize() {
     std::sort(initial_snakes_.begin(), initial_snakes_.end(),
               IsShorter);
   }
+  int *dim = image_->GetDimensions();
+  // resize converged_snakes_grid to image size
+  // overlap_threshold is the minimum grid width since this should ensure
+  // all points within overlap_threshold of point of interest are considered
+  int x_grid_size = (int)floor(dim[0] / snake_parameters_->overlap_threshold()) + 1;
+  int y_grid_size = (int)floor(dim[1] / snake_parameters_->overlap_threshold()) + 1;
+  //int z_grid_size = (int)floor(dim[2] / snake_parameters_->overlap_threshold()) + 1;
+  
+  converged_snakes_grid_two_.clearGrid();
+  //ClearConvergedSnakesGrid();
+
+  converged_snakes_grid_two_.setGridDimensions(Coordinate {(double)dim[0], (double)dim[1], (double)dim[2]});
+  converged_snakes_grid_two_.setNumBins(x_grid_size, y_grid_size, 1);
+  
+  /*converged_snakes_grid_.resize(x_grid_size);
+  for (int i = 0; i < x_grid_size; ++i){
+      converged_snakes_grid_[i].resize(y_grid_size);
+  }*/  
 }
 
 void Multisnake::AddLastConvergedToInitialSnakes(size_t index) {
@@ -260,18 +278,32 @@ void Multisnake::Evolve() {
   std::cout << "# initial snakes: " << number_of_initial_snakes
             << std::endl;
   SnakeContainer converged;
-
+  
+  converged_snakes_grid_two_.clearGrid();
+  
   while (!initial_snakes_.empty()) {
     Snake *snake = initial_snakes_.back();
     initial_snakes_.pop_back();
-    if (snake->Evolve(converged)) {
+    if (snake->Evolve(converged, converged_snakes_grid_two_)) {
       converged.push_back(snake);
+
+      // add all points in this snake to the converged grid
+      for(int s = 0; s < snake->GetSize(); s++) {
+          ConstRowVec curr_row = snake->GetVertex(s);
+          
+          double curr_x_val = curr_row[0];
+          double curr_y_val = curr_row[1];
+          //double curr_z_val = curr_row[2];
+          
+          converged_snakes_grid_two_.putInGrid(std::make_pair(converged.size()-1, s), Coordinate {curr_x_val, curr_y_val, 0.0});
+      }
     } else {
       initial_snakes_.insert(initial_snakes_.end(),
                              snake->subsnakes().begin(),
                              snake->subsnakes().end());
       delete snake;
     }
+    
 
     int ncompleted = static_cast<int>(number_of_initial_snakes - initial_snakes_.size());
     if (ncompleted < 0)
@@ -302,10 +334,19 @@ void Multisnake::Reconfigure(size_t index) {
   if (index) {
     previous_snakes = converged_snake_sequence_[index - 1];
   }
+  
   GroupSnakeSegments(previous_snakes, &segments, &grouped);
 
   DeleteSnakes(&(converged_snake_sequence_[index]));
   converged_snake_sequence_[index] = grouped;
+  
+  converged_snakes_grid_two_.constructTagList();
+  
+  /* uncomment line below about converged_snake_grid_sequence_ if grid is to be used
+   in ComputeCurveDistanceMatrix function*/
+  //converged_snake_grid_sequence_.push_back(converged_snakes_grid_two_);
+  
+  
   // converged_snake_sequence_[index] = segments;
 }
 
@@ -354,6 +395,8 @@ void Multisnake::Reset() {
   junction_sequence_.clear();
   comparing_junction_sequence_.clear();
   converged_snake_track_.clear();
+  converged_snakes_grid_two_.clearGrid();
+  //ClearConvergedSnakesGrid();
 }
 
 Snake * Multisnake::GetCorrespondingSnake(Snake *s,
@@ -374,17 +417,56 @@ Snake * Multisnake::GetCorrespondingSnake(Snake *s,
 }
 
 void Multisnake::SolveCorrespondence(size_t nframes) {
+  std::cout << "Begin solving correspondence" << std::endl;
   if (nframes < 2) return;
   converged_snake_track_.clear();
   const size_t n = GetNumberOfConvergedSnakes();
   const double threshold = snake_parameters_->association_threshold();
   Matrix<double> distance(n, n, threshold);
-  ComputeCurveDistanceMatrix(&distance, threshold);
+  
+  // create array instead of Matrix object for lapjv
+  double** distance_matrix = new double*[n];
+  for(int i = 0; i < n; i++) {
+    distance_matrix[i] = new double[n];
+    
+    for(int j = 0; j < n; j++) {
+      distance_matrix[i][j] = threshold;
+    }
+  }
+  
+  
+  time_t start, end;
+  time(&start);
+  
+  ComputeCurveDistanceMatrix(distance_matrix, threshold);
+  
+  
+  time(&end);
+  double time_elasped = difftime(end, start);
+  
+  std::cout << "Generating distance matrix took: " << time_elasped << std::endl;
+  
+  std::cout << "Finished generating distance matrix" << std::endl;
 
   Matrix<double> original_distance = distance;
 
   Munkres solver;
-  solver.solve(distance);
+  std::cout << "Begin lap solver" << std::endl;
+  time(&start);
+  
+  //solver.solve(distance);
+  
+  int* x_out = new int[n];
+  int* y_out = new int[n];
+  
+  int ret = lapjv_internal(n, distance_matrix, x_out, y_out);
+  
+  time(&end);
+  time_elasped = difftime(end, start);
+  
+  std::cout << "lap solver took: " << time_elasped << std::endl;
+  std::cout << "End solver" << std::endl;
+  
   SnakeContainer snakes;
   // Array maps a row/column of distance/solved matrix to frame index
   std::vector<size_t> frame_indices;
@@ -398,25 +480,32 @@ void Multisnake::SolveCorrespondence(size_t nframes) {
     }
   }
 
-  /* An example of distance matrix of a sequence of 3 frames, each of which
-   * contains 2 snakes. We only need to consider the upper right submatrix.
-   * Here "x" and "o" represent an invalid and valid distance value,
-   * respectively.
-   *
-   * x x o o o o
-   * x x o o o o
-   * x x x x o o
-   * x x x x o o
-   * x x x x x x
-   * x x x x x x
-   *
-   */
-
-  for (size_t i = 0;
-       i < distance.rows() - converged_snake_sequence_.back().size(); i++) {
+  // looping through 1D solution array from lapjv solver and adding
+  // snakes to tracks if they have a distance less than threshold
+  for (size_t i = 0; i < n; i++) {
+    int j = x_out[i];
+    if(distance_matrix[i][j] < threshold) {        
+        int track_id = FindTrack(snakes[i]);
+        if (track_id < 0) { // new track
+          SnakeTrack track(nframes);
+          track.SetSnake(frame_indices[i], snakes[i]);
+          converged_snake_track_.push_back(track);
+          track_id = static_cast<int>(converged_snake_track_.size() - 1);
+        }
+        // put snake j into the track of snake i
+        converged_snake_track_[track_id].SetSnake(frame_indices[j],
+                                                  snakes[j]);
+    }
+  }
+    
+  /*for (size_t i = 0;
+       i < n - converged_snake_sequence_.back().size(); i++) {
     for (size_t j = converged_snake_sequence_.front().size();
-         j < distance.columns(); j++) {
-      if (distance(i, j) == 0 && original_distance(i, j) < threshold) {
+         j < n; j++) {
+      //if (distance(i, j) == 0 && original_distance(i, j) < threshold) {
+      if (x_out[i] == j && original_distance(i, j) < threshold) {
+        std::cout << "hellO" << std::endl;
+        
         int track_id = FindTrack(snakes[i]);
         if (track_id < 0) { // new track
           SnakeTrack track(nframes);
@@ -429,7 +518,8 @@ void Multisnake::SolveCorrespondence(size_t nframes) {
                                                   snakes[j]);
       }
     }
-  }
+  }*/
+  
   std::sort(converged_snake_track_.begin(), converged_snake_track_.end());
 }
 
@@ -948,13 +1038,40 @@ void Multisnake::EvolveFinal(SnakeContainer *snakes,
   std::vector<bool> changed(snakes->size(), true);
   int count = 0;
 
+  //ClearConvergedSnakesGrid();
+  converged_snakes_grid_two_.clearGrid();
+  int curr_snake_index = 0;
+  for (auto it = snakes->begin(); it != snakes->end(); ++it) {
+    for (size_t j = 0; j != (*it)->GetSize(); ++j) {
+      double vertex[3] = {0.0, 0.0, 0.0};
+      (*it)->GetVertex(static_cast<int>(j), vertex);
+      converged_snakes_grid_two_.putInGrid(std::make_pair(curr_snake_index, j), Coordinate {vertex[0], vertex[1], 0.0});
+    }
+    curr_snake_index++;
+  }
+  
   while (!snakes->empty() && !AllFalse(changed)) {
     Snake *s = snakes->front();
     s->SaveVertexState();
     snakes->erase(snakes->begin());
-    if (s->EvolveFinal(*snakes, snake_parameters_->minimum_length())) {
+    
+    // snakes are being erased, need to update indexing in grid
+    converged_snakes_grid_two_.removeElement(0);
+    
+    
+    if (s->EvolveFinal(*snakes, snake_parameters_->minimum_length(), converged_snakes_grid_two_)) {
       snakes->push_back(s);
       changed[count % changed.size()] = s->VertexChanged(threshold);
+      
+      // add all points in this snake, s, to the converged grid
+      for(int s_index = 0; s_index < s->GetSize(); s_index++) {
+          ConstRowVec curr_row = s->GetVertex(s_index);
+          
+          double curr_x_val = curr_row[0];
+          double curr_y_val = curr_row[1];
+          
+          converged_snakes_grid_two_.putInGrid(std::make_pair(snakes->size()-1, s_index), Coordinate {curr_x_val, curr_y_val, 0.0});
+      }
     }
     count++;
   }
@@ -997,30 +1114,45 @@ int Multisnake::FindTrack(Snake *s) const {
   return -1;
 }
 
-void Multisnake::ComputeCurveDistanceMatrix(Matrix<double> *distance,
+
+void Multisnake::ComputeCurveDistanceMatrix(double **distance_matrix,
                                             double threshold) {
   // UpdateSnakeCentroid();
   // const double c = 0.2;
   const double c = snake_parameters_->c();
+  
+  int criteria = (int)ceil(log(threshold) / c);
+  
+  #pragma omp parallel for
   for (size_t i = 0; i < converged_snake_sequence_.size() - 1; i++) {
+    //Grid snakeGridTimeI = converged_snake_grid_sequence_[i];
     for (size_t j = i + 1; j < converged_snake_sequence_.size(); j++) {
-      for (size_t k = 0; k < converged_snake_sequence_[i].size(); k++) {
-        for (size_t l = 0; l < converged_snake_sequence_[j].size(); l++) {
-          double d = ComputeCurveDistance(converged_snake_sequence_[i][k],
-                                          converged_snake_sequence_[j][l]);
+      //Grid snakeGridTimeJ = converged_snake_grid_sequence_[j];
+      if(j-i <= criteria) {
+          for (size_t k = 0; k < converged_snake_sequence_[i].size(); k++) {
+            for (size_t l = 0; l < converged_snake_sequence_[j].size(); l++) {              
+              //double d = ComputeCurveDistance(converged_snake_sequence_[i][k], k, snakeGridTimeI,
+              //                                converged_snake_sequence_[j][l], l, snakeGridTimeJ);
+              
+              double d = ComputeCurveDistance(converged_snake_sequence_[i][k],
+                                              converged_snake_sequence_[j][l]);
+              
+              d *= std::exp(c * (j - i - 1));
 
-          d *= std::exp(c * (j - i - 1));
-          if (d < threshold) {
-            size_t row = ComputeSnakeIndex(i, k);
-            size_t col = ComputeSnakeIndex(j, l);
-            // std::cout << "row: " << row << "\tcol: " << col << std::endl;
-            (*distance)(row, col) = d;
+              if (d < threshold) {
+                size_t row = ComputeSnakeIndex(i, k);
+                size_t col = ComputeSnakeIndex(j, l);
+                // std::cout << "row: " << row << "\tcol: " << col << std::endl;
+                //(*distance)(row, col) = d;
+                distance_matrix[row][col] = d;
+              }
+            }
           }
-        }
       }
     }
   }
 }
+
 
 void Multisnake::UpdateSnakeCentroid() {
   for (auto snakes : converged_snake_sequence_) {
