@@ -244,4 +244,8 @@ int SnakeParameters::GetSnakeId() {
   return snake_id_counter_;
 }
 
+void SnakeParameters::ResetSnakeId() {
+  snake_id_counter_ = 0;
+}
+
 }  // namespace soax

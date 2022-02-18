@@ -396,6 +396,7 @@ void Multisnake::Reset() {
   comparing_junction_sequence_.clear();
   converged_snake_track_.clear();
   converged_snakes_grid_two_.clearGrid();
+  snake_parameters_->ResetSnakeId();
   //ClearConvergedSnakesGrid();
 }
 
@@ -422,7 +423,7 @@ void Multisnake::SolveCorrespondence(size_t nframes) {
   converged_snake_track_.clear();
   const size_t n = GetNumberOfConvergedSnakes();
   const double threshold = snake_parameters_->association_threshold();
-  Matrix<double> distance(n, n, threshold);
+  //Matrix<double> distance(n, n, threshold);
   
   // create array instead of Matrix object for lapjv
   double** distance_matrix = new double*[n];
@@ -448,9 +449,9 @@ void Multisnake::SolveCorrespondence(size_t nframes) {
   
   std::cout << "Finished generating distance matrix" << std::endl;
 
-  Matrix<double> original_distance = distance;
+  //Matrix<double> original_distance = distance;
 
-  Munkres solver;
+  //Munkres solver;
   std::cout << "Begin lap solver" << std::endl;
   time(&start);
   

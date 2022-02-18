@@ -150,6 +150,7 @@ class SnakeParameters {
                         const std::string &value);
 
   int GetSnakeId();
+  void ResetSnakeId();
   int snake_id_counter() const {return snake_id_counter_;}
   void set_snake_id_counter(int counter) {snake_id_counter_ = counter;}
 

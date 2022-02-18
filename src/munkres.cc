@@ -16,6 +16,8 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
  */
 
+// THIS FILE WILL EVENTUALLY BE REMOVED AND REPLACED WITH MORE EFFICIENT lapjv SOLVER
+
 #include "include/munkres.h"
 
 #include <iostream>
