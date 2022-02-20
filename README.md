@@ -31,24 +31,24 @@ website](https://www.lehigh.edu/~div206/tsoax/).
 1. Install [Eigen 3](http://eigen.tuxfamily.org) and [Qt 5](https://www.qt.io)
    using your package manager ([Homebrew](https://brew.sh) or dnf, apt):
    ``` bash
-   $ brew install eigen qt cmake # for macOS
+   $ brew install eigen qt@5 cmake # for macOS
    $ sudo dnf install eigen3-devel qt5-devel libXt-devel cmake # for Fedora
    ```
    (**macOS only**) Add environment variables in your `.bash_profile`:
    ``` bash
-   export Qt5_DIR=/usr/local/opt/qt
-   export PATH=/usr/local/opt/qt/bin:$PATH
+   export Qt5_DIR=/usr/local/opt/qt@5
+   export PATH=/usr/local/opt/qt@5/bin:$PATH
    ```
    and apply them: 
    ``` bash
    $ . ~/.bash_profile
    ```
-2. Install VTK. Download [VTK](https://www.vtk.org/download/#latest) and
+2. Install VTK. Download [VTK](https://www.vtk.org/download/#latest). This installation was done with VTK 8.1.2 (https://github.com/Kitware/VTK/tree/v8.1.2)
    do an out-of-source build
    ``` bash
    $ mkdir your-vtk-build-dir
    $ cd your-vtk-build-dir
-   $ cmake -DCMAKE_BUILD_TYPE=Release -DVTK_GROUP_ENABLE_Qt=YES /path/to/your-VTK-src-dir/
+   $ cmake -DCMAKE_BUILD_TYPE=Release -DVTK_GROUP_ENABLE_Qt=YES -DModule_vtkGUISupportQtOpenGL=ON /path/to/your-VTK-src-dir/
    $ make -j 4
    ```
    Add environment variable `VTK_DIR` in your `.bash_profile`:
