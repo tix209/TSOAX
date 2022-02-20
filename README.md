@@ -68,8 +68,8 @@ website](https://www.lehigh.edu/~div206/tsoax/).
 #### Windows
 1. Download and install [Microsoft Visual
    Studio](https://www.visualstudio.com/downloads/) 2015 or newer,
-   [CMake](https://cmake.org), and [Qt 5](https://www.qt.io).
-2. Configure [VTK](https://www.vtk.org/download/#latest) with CMake (`cmake-gui`).
+   [CMake](https://cmake.org), and [Qt 5](https://www.qt.io). This installation was checked with Qt version up to 5.12. 
+2. Configure [VTK](https://www.vtk.org/download/#latest) with CMake (`cmake-gui`). This installation was checked with VTK 8.1.1.
    - Enter the folder path of where you extracted VTK source code
    - Enter another folder path for `vtk_binary_dir`
    - Click `Configure`
