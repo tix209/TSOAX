@@ -43,8 +43,8 @@ website](https://www.lehigh.edu/~div206/tsoax/).
    ``` bash
    $ . ~/.bash_profile
    ```
-2. Install VTK. Download [VTK](https://www.vtk.org/download/#latest). This installation was done with VTK 8.1.2 (https://github.com/Kitware/VTK/tree/v8.1.2)
-   do an out-of-source build
+2. Install VTK. Download [VTK](https://www.vtk.org/download/#latest). This installation was done with VTK 8.1.2 (https://github.com/Kitware/VTK/tree/v8.1.2).
+   Do an out-of-source build
    ``` bash
    $ mkdir your-vtk-build-dir
    $ cd your-vtk-build-dir
