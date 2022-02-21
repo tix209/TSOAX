@@ -27,6 +27,27 @@ website](https://www.lehigh.edu/~div206/tsoax/).
 
 ### From source
 
+#### macOS (February 2022)
+
+1.	Install XCode and eigen 3 with brew install eigen
+2.	Install Qt5. This installation was checked with Qt 5.12.12 from download.qt.io/archive/qt/5.12/5.12.12
+3.	Download CMake (GUI version) from cmake.org. This installation was checked with CMake 3.23.0
+4.	Download VTK source code. This installation was checked with VTK 8.1.1 from https://github.com/Kitware/VTK/tree/v8.1.1
+5.	Configure an Xcode VTK project with CMake. In CMake: 
+select Release in CMAKE_CONFIGURATION_TYPES
+activate Module_vtkGUISupportQt, Module_vtk_GUISupportQtOpenGL, VTK_Group_Qt
+uncheck BUILD_SHARED_LIBS
+set Qt5_DIR to the subfolder clang_64/lib/cmake/Qt5 of the Qt directory
+6.	Compile VTK in XCode, selecting Intel and/or Silicon architectures
+7.	Download TSOAX git clone --recursive https://github.com/tix209/TSOAX.git
+8.	Configure an Xcode TSOAX project with CMake. In CMake:
+set Qt5_DIR to the subfolder clang_64/lib/bin of the Qt directory
+set VTK_DIR to the build  folder of VTK
+9.	Compile a Release version of TSOAX in XCode, selecting Intel and/or Silicon architectures
+(You may comment out including omp.h and delete -fopenmp as well update the include directory of eigen3 in the source)
+
+
+
 #### Linux and macOS (>=10.8)
 1. Install [Eigen 3](http://eigen.tuxfamily.org) and [Qt 5](https://www.qt.io)
    using your package manager ([Homebrew](https://brew.sh) or dnf, apt):
@@ -43,7 +64,7 @@ website](https://www.lehigh.edu/~div206/tsoax/).
    ``` bash
    $ . ~/.bash_profile
    ```
-2. Install VTK. Download [VTK](https://www.vtk.org/download/#latest). This installation was done with VTK 8.1.2 (https://github.com/Kitware/VTK/tree/v8.1.2).
+2. Install VTK. Download [VTK](https://www.vtk.org/download/#latest). 
    Do an out-of-source build
    ``` bash
    $ mkdir your-vtk-build-dir
