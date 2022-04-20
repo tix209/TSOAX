@@ -498,28 +498,6 @@ void Multisnake::SolveCorrespondence(size_t nframes) {
                                                   snakes[j]);
     }
   }
-    
-  /*for (size_t i = 0;
-       i < n - converged_snake_sequence_.back().size(); i++) {
-    for (size_t j = converged_snake_sequence_.front().size();
-         j < n; j++) {
-      //if (distance(i, j) == 0 && original_distance(i, j) < threshold) {
-      if (x_out[i] == j && original_distance(i, j) < threshold) {
-        std::cout << "hellO" << std::endl;
-        
-        int track_id = FindTrack(snakes[i]);
-        if (track_id < 0) { // new track
-          SnakeTrack track(nframes);
-          track.SetSnake(frame_indices[i], snakes[i]);
-          converged_snake_track_.push_back(track);
-          track_id = static_cast<int>(converged_snake_track_.size() - 1);
-        }
-        // put snake j into the track of snake i
-        converged_snake_track_[track_id].SetSnake(frame_indices[j],
-                                                  snakes[j]);
-      }
-    }
-  }*/
   
   std::sort(converged_snake_track_.begin(), converged_snake_track_.end());
 }

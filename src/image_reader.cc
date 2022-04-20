@@ -66,18 +66,26 @@ void ImageReader::ReadDir(const QString &directory) {
   QStringList filenames = SortFilenames(dir.entryList());
 
   QString name;
-  foreach(name, filenames) {
-    QString path = dir.absoluteFilePath(name);
-    vtkImageReader2 *reader = vtkImageReader2Factory::CreateImageReader2(
-        path.toStdString().c_str());
-    reader->SetFileName(path.toStdString().c_str());
-    reader->Update();
-    vtkImageData *image = vtkImageData::New();
-    image->ShallowCopy(reader->GetOutput());
-    images_.push_back(image);
-    reader->Delete();
-    paths_ << path;
-  }
+  
+ 
+      foreach(name, filenames) {
+        vtkImageReader2 *reader;
+        QString path;
+        
+        path = dir.absoluteFilePath(name);
+        #pragma omp critical
+        {
+            reader = vtkImageReader2Factory::CreateImageReader2(
+                path.toStdString().c_str());
+        }
+        reader->SetFileName(path.toStdString().c_str());
+        reader->Update();
+        vtkImageData *image = vtkImageData::New();
+        image->ShallowCopy(reader->GetOutput());
+        images_.push_back(image);
+        reader->Delete();
+        paths_ << path;
+      }
   path_ = dir.absolutePath();
 }
 

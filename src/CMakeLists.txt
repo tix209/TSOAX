@@ -11,8 +11,52 @@ find_package(Qt5 COMPONENTS Widgets REQUIRED)
 find_package(VTK REQUIRED)
 include(${VTK_USE_FILE})
 
+add_definitions(-DBOOST_ERROR_CODE_HEADER_ONLY)
 
-file(GLOB SRCS *.cc)
+## Enable these options for Windows build
+if (WIN32)
+  set(Boost_USE_STATIC_LIBS        ON)
+  set(Boost_USE_MULTITHREADED      ON)
+  set(Boost_USE_STATIC_RUNTIME    OFF)
+endif()
+
+find_package(Boost COMPONENTS
+  program_options filesystem system REQUIRED)
+
+if(Boost_FOUND)
+  include_directories(${Boost_INCLUDE_DIRS})
+endif(Boost_FOUND)
+
+#file(GLOB SRCS *.cc)
+set(SRCS actor_color.cc
+        analysis_options_dialog.cc
+        gradient_calculator.cc
+        grid.cc
+        image.cc
+        image_plane.cc
+        image_reader.cc
+        image_resampler.cc
+        interpolator.cc
+        junction_actor.cc
+        junctions.cc
+        lapjv.cc
+        main_window.cc
+        multisnake.cc
+        munkres.cc
+        parameters_dialog.cc
+        slice_planes.cc
+        snake.cc
+        snake_actor.cc
+        snake_parameters.cc
+        snake_tip.cc
+        snake_tip_set.cc
+        snake_track.cc
+        util.cc
+        view_options_dialog.cc
+        viewer.cc
+        viewpoint.cc
+        volume_rendering.cc)
+
 qt_wrap_cpp(${PROJECT_NAME} SRCS
   ../include/multisnake.h
   ../include/viewer.h
@@ -43,7 +87,10 @@ if (APPLE)
   set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST
     ${CMAKE_SOURCE_DIR}/TroaxBundleInfo.plist.in)
 else (APPLE)
-  add_executable(${PROJECT_NAME} ${SRCS} icons.qrc)
+  add_executable(${PROJECT_NAME} ${SRCS} troax.cc icons.qrc)
 endif (APPLE)
 
+add_executable(batch_tsoax ${SRCS} batch_tsoax.cc )
+
 target_link_libraries(${PROJECT_NAME} Qt5::Widgets ${VTK_LIBRARIES})
+target_link_libraries(batch_tsoax Qt5::Widgets ${VTK_LIBRARIES} ${Boost_PROGRAM_OPTIONS_LIBRARY} ${Boost_FILESYSTEM_LIBRARY} ${Boost_SYSTEM_LIBRARY})
