@@ -98,21 +98,26 @@ set VTK_DIR to the build  folder of VTK
    - After the configuration is done, check `VTK_Group_ENABLE_Qt` and `VTK_USE_CXX11_FEATURES`
    - Click `Configure`, and change `VTK_QT_VERSION` to 5 and
      `QT_QMAKE_EXECUTABLE` to `C:/Qt/5.10/msvc2015_64/bin`
-   - Click `Configure`. Change `Qt5_DIR` to `C:/Qt/5.8/msvc2015_64/lib/cmake/Qt5`
+   - Click `Configure`. Set `Qt5_DIR` (e.g. to `C:/Qt/5.12.2/msvc2017_64/lib/cmake5`)
    - Click `Configure`
    - Click `Generate` and then `Open Project`
    - In Visual Studio, change `Debug` to `Release` mode and build solution.
 3. Download [Eigen 3](http://eigen.tuxfamily.org). Extract the zip file and rename it to `eigen3`.
-4. Open `Git Bash` then `$ git clone --recursive
+4. For TSOAX version newer to 0.2.0, install the boost library (used by batch_tsoax) by downloading the Windows binaries. This installation was checked with boost version 1.77.0 
+6. Open `Git Bash` then `$ git clone --recursive
    https://github.com/tix209/TSOAX.git`.
 5. Configure TSOAX in CMake
    - Enter folder path of TSOAX source code
    - Enter folder path for `tsoax_binary_dir`
    - Click `Configure`
    - Specify generator e.g., Visual Studio 14 2015 Win64
-   - Set `Qt5_DIR` to `C:/Qt/5.8/msvc2015_64/lib/cmake/Qt5Widgets`
+   - Set `Qt5_DIR` , e.g. to `C:/Qt/5.12.2/msvc2017_64/lib/cmake/`
    - Click `Configure`. Set `VTK_DIR` to `vtk_binary_dir`
    - Click `Configure`
+   - Change all /MD flags to /MT
+   - If using boost, in CMake, set Boost_INCLUDE_DIR (e.g to C:/boost_1_77_0) and Boost_LIBRARY_DIR_RELEASE (e.g. to C:/boost_1_77_0/lib64-msvc-14.1)
+   - Set Boost_FILESYSTEM_LIBRARY_DEBUG to C:/boost_1_77_0/lib64-msvc-14.1/libboost_filesystem-vc141-mt-s-x64-1_77.lib and Boost_FILESYSTEM_LIBRARY_RELEASE to C:/boost_1_77_0/lib64-msvc-14.1/libboost_filesystem-vc141-mt-sgd-x64-1_77.lib, or equivalent
+   - Do the same for LIBRARY_DIR, PROGRAM_OPTIONS_LIBRARY and SYSTEM_LIBRARY, all of which point to the static libraries
    - Click `Generate` and then `Open Project`
    - In Visual Studio, change Debug to Release mode. Click `TSOAX` project and
    press <kbd>ALT</kbd>+<kbd>ENTER</kbd>. In `VC++ Directories`, add the path
