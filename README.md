@@ -113,11 +113,11 @@ set VTK_DIR to the build  folder of VTK
    - Specify generator e.g., Visual Studio 14 2015 Win64
    - Set `Qt5_DIR` , e.g. to `C:/Qt/5.12.2/msvc2017_64/lib/cmake/`
    - Click `Configure`. Set `VTK_DIR` to `vtk_binary_dir`
-   - Click `Configure`
    - Change all /MD flags to /MT
    - If using boost, in CMake, set Boost_INCLUDE_DIR (e.g to C:/boost_1_77_0) and Boost_LIBRARY_DIR_RELEASE (e.g. to C:/boost_1_77_0/lib64-msvc-14.1)
    - Set Boost_FILESYSTEM_LIBRARY_DEBUG to C:/boost_1_77_0/lib64-msvc-14.1/libboost_filesystem-vc141-mt-s-x64-1_77.lib and Boost_FILESYSTEM_LIBRARY_RELEASE to C:/boost_1_77_0/lib64-msvc-14.1/libboost_filesystem-vc141-mt-sgd-x64-1_77.lib, or equivalent
    - Do the same for LIBRARY_DIR, PROGRAM_OPTIONS_LIBRARY and SYSTEM_LIBRARY, all of which point to the static libraries
+   - Click `Configure`
    - Click `Generate` and then `Open Project`
    - In Visual Studio, change Debug to Release mode. Click `TSOAX` project and
    press <kbd>ALT</kbd>+<kbd>ENTER</kbd>. In `VC++ Directories`, add the path
