@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <iostream>
 #include "./util.h"
-#include "./Coordinate.h"
+#include "./coordinate.h"
 
 namespace soax {
     
