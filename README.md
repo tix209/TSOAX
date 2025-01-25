@@ -27,6 +27,14 @@ website](https://www.lehigh.edu/~div206/tsoax/).
 
 ### From source
 
+#### Ubuntu 22.04 (November 2023)
+TSOAX can be compiled using:
+
+1. gcc 11.4.0
+2. qt5
+3. cmake 3.22.1 (+cmake-gui, see cmake selections below)
+4. VTK 8.2.0 with this [fix](https://discourse.vtk.org/t/multiple-definition-of-exodus-unused-symbol-dummy-1-when-building-vtk-8-2-0/11744)
+
 #### macOS (February 2022)
 
 1.	Install XCode and eigen 3 with brew install eigen
