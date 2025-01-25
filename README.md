@@ -27,7 +27,7 @@ website](https://www.lehigh.edu/~div206/tsoax/).
 
 ### From source
 
-#### Ubuntu 22.04 (November 2023)
+#### Ubuntu 22.04 (November 2024)
 TSOAX can be compiled using:
 
 1. gcc 11.4.0
