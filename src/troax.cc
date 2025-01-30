@@ -24,6 +24,7 @@
 #include "include/main_window.h"
 #include "QVTKOpenGLWidget.h"
 #include "vtkGenericOpenGLRenderWindow.h"
+#include <QSurfaceFormat>
 
 int main(int argc, char **argv) {
 #ifndef __APPLE__
