@@ -43,9 +43,9 @@ libxt-dev  libboost-all-dev
 
     In VTK build directory: make -j 4
 
-    To fix compiling errors: Add #include <QPainterPath> 
+    To fix compiling errors: Add #include \<QPainterPath\> 
     in 
-    "VTK-8.2.0\Rendering\Qt\vtkQtLabelRenderStrategy.h"
+    "VTK-8.2.0\Rendering\Qt\vtkQtLabelRenderStrategy.h" and
     "VTK-8.2.0\Rendering\Qt\vtkQtStringToImage.h"
 
 3. Compile TSOAX: 
@@ -58,7 +58,7 @@ libxt-dev  libboost-all-dev
 
     CMAKE_BUILD_TYPE Release
 
-    Run make in TSOAX build directory. May need to fix compiling errors by updating CMakeLists.txt, adding "-fpermissive" in compilining options in CMakeLists.txt, add #include <QSurfaceFormat> in troax.cc
+    Run make in TSOAX build directory. May need to fix compiling errors by updating CMakeLists.txt, adding "-fpermissive" in compilining options in CMakeLists.txt, add #include \<QSurfaceFormat\> in troax.cc
 
 
 #### macOS (February 2022)
