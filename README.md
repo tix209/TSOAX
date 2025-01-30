@@ -25,15 +25,41 @@ You can access the full paper [here](https://rdcu.be/bl3ch).
 You can download and install binaries from [TSOAX
 website](https://www.lehigh.edu/~div206/tsoax/).
 
+This website also contains instructions on how to download TSOAX in a docker container
+
 ### From source
 
-#### Ubuntu 22.04 (November 2024)
-TSOAX can be compiled using:
+#### Ubuntu 22.04 (January 2025, for docker image)
+1. Install the following libraries with apt-get: 
 
-1. gcc 11.4.0
-2. qt5
-3. cmake 3.22.1 (+cmake-gui, see cmake selections below)
-4. VTK 8.2.0 with this [fix](https://discourse.vtk.org/t/multiple-definition-of-exodus-unused-symbol-dummy-1-when-building-vtk-8-2-0/11744)
+    build-essential  libeigen3-dev  qtbase5-dev  qtcreator  qt5-qmake
+libqt5x11extras5-dev  cmake   x11-apps  cmake-gui
+libxt-dev  libboost-all-dev
+
+2. Compile VTK: 
+    Start cmake-gui to compile VTK from source (8.2.0, https://github.com/Kitware/VTK/tree/v8.2.0) to a new VTK build directory 
+
+    Chose Unix Makefile; VTK_Group_Qt: yes; BUILD_SHARED_LIBS: no; CMAKE_BUILD_TYPE: Release
+
+    In VTK build directory: make -j 4
+
+    To fix compiling errors: Add #include <QPainterPath> 
+    in 
+    "VTK-8.2.0\Rendering\Qt\vtkQtLabelRenderStrategy.h"
+    "VTK-8.2.0\Rendering\Qt\vtkQtStringToImage.h"
+
+3. Compile TSOAX: 
+
+    Get TSOAX: $git clone --recursive https://github.com/tix209/TSOAX.git
+
+    cmake-gui to configure from TSOAX from source to a new TSOAX build directory
+
+    Set VTK_DIR to VTK build path
+
+    CMAKE_BUILD_TYPE Release
+
+    Run make in TSOAX build directory. May need to fix compiling errors by updating CMakeLists.txt, adding "-fpermissive" in compilining options in CMakeLists.txt, add #include <QSurfaceFormat> in troax.cc
+
 
 #### macOS (February 2022)
 
@@ -54,45 +80,6 @@ set VTK_DIR to the build  folder of VTK
 9.	Compile a Release version of TSOAX in XCode, selecting Intel and/or Silicon architectures
 (You may comment out including omp.h and delete -fopenmp as well update the include directory of eigen3 in the source)
 
-
-
-#### Linux and macOS (>=10.8)
-1. Install [Eigen 3](http://eigen.tuxfamily.org) and [Qt 5](https://www.qt.io)
-   using your package manager ([Homebrew](https://brew.sh) or dnf, apt):
-   ``` bash
-   $ brew install eigen qt@5 cmake # for macOS
-   $ sudo dnf install eigen3-devel qt5-devel libXt-devel cmake # for Fedora
-   ```
-   (**macOS only**) Add environment variables in your `.bash_profile`:
-   ``` bash
-   export Qt5_DIR=/usr/local/opt/qt@5
-   export PATH=/usr/local/opt/qt@5/bin:$PATH
-   ```
-   and apply them: 
-   ``` bash
-   $ . ~/.bash_profile
-   ```
-2. Install VTK. Download [VTK](https://www.vtk.org/download/#latest). 
-   Do an out-of-source build
-   ``` bash
-   $ mkdir your-vtk-build-dir
-   $ cd your-vtk-build-dir
-   $ cmake -DCMAKE_BUILD_TYPE=Release -DVTK_GROUP_ENABLE_Qt=YES -DModule_vtkGUISupportQtOpenGL=ON /path/to/your-VTK-src-dir/
-   $ make -j 4
-   ```
-   Add environment variable `VTK_DIR` in your `.bash_profile`:
-
-   ``` bash
-   export VTK_DIR=/path/to/your-vtk-build-dir
-   ```
-3. Build TSOAX.
-   ``` bash
-   $ git clone --recursive https://github.com/tix209/TSOAX.git
-   $ cmake -DCMAKE_BUILD_TYPE=Release /path/to/tsoax/src/
-   $ make -j 4
-   ``` 
-   In macOS, you can launch the program by searching for "TSOAX" in the
-   spotlight (<kbd>⌘</kbd>+<kbd>Space</kbd>).
 
 #### Windows
 1. Download and install [Microsoft Visual
@@ -133,3 +120,43 @@ set VTK_DIR to the build  folder of VTK
    - Build the release version of TSOAX
    - Copy `Qt5Core.dll`, `Qt5Gui.dll`, `Qt5Widgets.dll` from `C:/Qt/5.8/msvc2015_64/bin/`
    to `tsoax_binary_dir/src/Release`.
+
+#### Older compiling instructions for Linux and macOS (>=10.8)
+1. Install [Eigen 3](http://eigen.tuxfamily.org) and [Qt 5](https://www.qt.io)
+   using your package manager ([Homebrew](https://brew.sh) or dnf, apt):
+   ``` bash
+   $ brew install eigen qt@5 cmake # for macOS
+   $ sudo dnf install eigen3-devel qt5-devel libXt-devel cmake # for Fedora
+   ```
+   (**macOS only**) Add environment variables in your `.bash_profile`:
+   ``` bash
+   export Qt5_DIR=/usr/local/opt/qt@5
+   export PATH=/usr/local/opt/qt@5/bin:$PATH
+   ```
+   and apply them: 
+   ``` bash
+   $ . ~/.bash_profile
+   ```
+2. Install VTK. Download [VTK](https://www.vtk.org/download/#latest). 
+   Do an out-of-source build
+   ``` bash
+   $ mkdir your-vtk-build-dir
+   $ cd your-vtk-build-dir
+   $ cmake -DCMAKE_BUILD_TYPE=Release -DVTK_GROUP_ENABLE_Qt=YES -DModule_vtkGUISupportQtOpenGL=ON /path/to/your-VTK-src-dir/
+   $ make -j 4
+   ```
+   Add environment variable `VTK_DIR` in your `.bash_profile`:
+
+   ``` bash
+   export VTK_DIR=/path/to/your-vtk-build-dir
+   ```
+3. Build TSOAX.
+   ``` bash
+   $ git clone --recursive https://github.com/tix209/TSOAX.git
+   $ cmake -DCMAKE_BUILD_TYPE=Release /path/to/tsoax/src/
+   $ make -j 4
+   ``` 
+   In macOS, you can launch the program by searching for "TSOAX" in the
+   spotlight (<kbd>⌘</kbd>+<kbd>Space</kbd>).
+
+
