@@ -7,8 +7,9 @@ set(CMAKE_AUTOUIC ON) # UI files
 # https://blog.kitware.com/cmake-finding-qt5-the-right-way/. Before configure,
 # Qt5_DIR should be set by 'export Qt5_DIR="/usr/local/opt/qt5"' in your
 # .bashrc. Set CMAKE_PREFIX_PATH is discouraged.
-find_package(Qt5 COMPONENTS Widgets REQUIRED)
+find_package(Qt5 COMPONENTS Widgets X11Extras REQUIRED)
 find_package(VTK REQUIRED)
+
 include(${VTK_USE_FILE})
 
 add_definitions(-DBOOST_ERROR_CODE_HEADER_ONLY)
@@ -26,6 +27,16 @@ find_package(Boost COMPONENTS
 if(Boost_FOUND)
   include_directories(${Boost_INCLUDE_DIRS})
 endif(Boost_FOUND)
+
+# Manually add moc headers here
+set(MOC_HEADERS
+  ../include/multisnake.h
+  ../include/viewer.h
+  ../include/main_window.h
+  ../include/parameters_dialog.h
+  ../include/view_options_dialog.h
+  ../include/analysis_options_dialog.h
+)
 
 #file(GLOB SRCS *.cc)
 set(SRCS actor_color.cc
@@ -55,15 +66,11 @@ set(SRCS actor_color.cc
         view_options_dialog.cc
         viewer.cc
         viewpoint.cc
-        volume_rendering.cc)
+        volume_rendering.cc
+        )
 
-qt_wrap_cpp(${PROJECT_NAME} SRCS
-  ../include/multisnake.h
-  ../include/viewer.h
-  ../include/main_window.h
-  ../include/parameters_dialog.h
-  ../include/view_options_dialog.h
-  ../include/analysis_options_dialog.h)
+# Automatically wrap moc files
+qt5_wrap_cpp(MOC_SRCS ${MOC_HEADERS})
 
 if (APPLE)
   set(ICON_FOLDER ../icon)
@@ -87,10 +94,11 @@ if (APPLE)
   set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST
     ${CMAKE_SOURCE_DIR}/TroaxBundleInfo.plist.in)
 else (APPLE)
-  add_executable(${PROJECT_NAME} ${SRCS} troax.cc icons.qrc)
+  add_executable(${PROJECT_NAME} ${SRCS} ${MOC_SRCS} troax.cc icons.qrc)
 endif (APPLE)
 
-add_executable(batch_tsoax ${SRCS} batch_tsoax.cc )
+add_executable(batch_tsoax ${SRCS} ${MOC_SRCS} batch_tsoax.cc )
 
-target_link_libraries(${PROJECT_NAME} Qt5::Widgets ${VTK_LIBRARIES})
-target_link_libraries(batch_tsoax Qt5::Widgets ${VTK_LIBRARIES} ${Boost_PROGRAM_OPTIONS_LIBRARY} ${Boost_FILESYSTEM_LIBRARY} ${Boost_SYSTEM_LIBRARY})
+target_link_libraries(${PROJECT_NAME} Qt5::Widgets Qt5::X11Extras ${VTK_LIBRARIES})
+target_link_libraries(batch_tsoax Qt5::Widgets Qt5::X11Extras ${VTK_LIBRARIES} ${Boost_PROGRAM_OPTIONS_LIBRARY} ${Boost\
+_FILESYSTEM_LIBRARY} ${Boost_SYSTEM_LIBRARY})
