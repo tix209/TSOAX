@@ -100,5 +100,4 @@ endif (APPLE)
 add_executable(batch_tsoax ${SRCS} ${MOC_SRCS} batch_tsoax.cc )
 
 target_link_libraries(${PROJECT_NAME} Qt5::Widgets Qt5::X11Extras ${VTK_LIBRARIES})
-target_link_libraries(batch_tsoax Qt5::Widgets Qt5::X11Extras ${VTK_LIBRARIES} ${Boost_PROGRAM_OPTIONS_LIBRARY} ${Boost\
-_FILESYSTEM_LIBRARY} ${Boost_SYSTEM_LIBRARY})
+target_link_libraries(batch_tsoax Qt5::Widgets Qt5::X11Extras ${VTK_LIBRARIES} ${Boost_PROGRAM_OPTIONS_LIBRARY} ${Boost_FILESYSTEM_LIBRARY} ${Boost_SYSTEM_LIBRARY})
