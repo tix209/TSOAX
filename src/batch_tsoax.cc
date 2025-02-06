@@ -9,6 +9,7 @@
  */
 
 #include <sstream>
+#include <fstream>
 #include <iomanip>
 #include <omp.h>
 #include "boost/program_options.hpp"
