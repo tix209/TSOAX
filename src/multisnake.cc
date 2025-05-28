@@ -500,6 +500,15 @@ void Multisnake::SolveCorrespondence(size_t nframes) {
   }
   
   std::sort(converged_snake_track_.begin(), converged_snake_track_.end());
+  
+  // need to delete all arrays allocated with new in this function
+  for(int i = 0; i < n; i++) {
+    delete[] distance_matrix[i];
+  }
+  delete[] distance_matrix;
+  
+  delete[] x_out;
+  delete[] y_out;  
 }
 
 size_t Multisnake::GetNumberOfConvergedSnakes() const {
@@ -860,7 +869,7 @@ void Multisnake::LinkSegments(const Junctions &junctions,
                              snake_parameters_, is_open,
                              snake_parameters_->GetSnakeId());
     grouped->push_back(snake);
-  }
+  }                     
 }
 
 void Multisnake::LinkFromSegmentTip(const Junctions &junctions,
@@ -885,8 +894,11 @@ void Multisnake::LinkFromSegmentTip(const Junctions &junctions,
       segments->erase(it);
     }
     log->push_back(neighbor->snake());
-    delete neighbor->snake();
+    
     SnakeTip *t = junctions.GetTip(neighbor->snake(), !neighbor->is_head());
+    // switch order here so that neighbor->snake() isn't used after it is deleted
+    // not completely sure this prevents all memory leaks here
+    delete neighbor->snake();
     // Link to the next segment
     LinkFromSegmentTip(junctions, t->neighbor(), from_head, segments,
                        blocks, is_open, log);
@@ -1052,6 +1064,10 @@ void Multisnake::EvolveFinal(SnakeContainer *snakes,
           converged_snakes_grid_two_.putInGrid(std::make_pair(snakes->size()-1, s_index), Coordinate {curr_x_val, curr_y_val, 0.0});
       }
     }
+    else {
+        // need to delete the snake that was stored in snakes if it is not re-added
+        delete s;
+    }                                     
     count++;
   }
 }
